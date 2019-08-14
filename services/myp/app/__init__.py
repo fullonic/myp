@@ -37,9 +37,16 @@ def create_app(config=None):
 
     # Set up shell context for flask client
     from .auth.models import User
-    from .main.models import TagGPX
+    from .main.models import TagGPX, Mapping
+
     @app.shell_context_processor
     def ctx():
-        return {"app": app, "db": db, "User": User, "TagGPX": TagGPX}
+        return {
+            "app": app,
+            "db": db,
+            "User": User,
+            "TagGPX": TagGPX,
+            "Mapping": Mapping,
+        }
 
     return app

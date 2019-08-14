@@ -106,12 +106,15 @@ $(document).ready(function() {
         $("#submitBtnGPX").attr('disabled', true).text("Upload Complete!");
         submitBtnGPX.classList.remove("btn-danger");
         submitBtnGPX.classList.add("btn-success");
+        // GET URL FOR DOWNLOAD FILE
+        getFile();
         alert('File uploaded!');
+        var btn = document.getElementById('download_gpx');
+        btn.classList.remove("d-none");
       }
     });
 
   });
-
 });
 
 
@@ -119,3 +122,21 @@ function nFiles() {
   var label = document.getElementsByTagName("label");
   $("").css("content", "files");
 };
+
+
+function getFile() {
+  var project_name = document.getElementById("project_name").value;
+
+  $.ajax({
+        type: 'POST',
+        url: "/get_file/" + project_name + "/",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(msg) {
+          var btn = document.getElementById('download_gpx');
+          var url_ = "/get_file/" + msg["url"] + "/";
+          console.log(url_);
+          btn.href = url_
+        }
+      }
