@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+
+
+{% block body %}
+{% include 'navbar.html' %}
+
+<!-- FORM -->
+<div class="wrapper fadeInDown">
+  <div id="loginForm">
+    <!-- Tabs Titles -->
+    <!-- <div class="fadeIn first">
+      <img src="https://img.icons8.com/ios/50/000000/camera.png" id="icon" alt="User Icon" />
+    </div> -->
+    <!-- Login Form -->
+    <form class="pt-5" method="POST" , action="{{ url_for('auth.login') }}">
+      {{ form.hidden_tag() }}
+
+      {{ form.email(class_="fadeIn second", placeholder="insert your email") }}
+      {{ form.password(class_="fadeIn third", placeholder="insert your password") }}
+      <input id="submit" type="submit" class="fadeIn fourth" value="Log In">
+    </form>
+
+    <!-- Remind Passowrd -->
+    <div id="formFooter">
+      <a class="underlineHover" href="#">Forgot Password?</a>
+    </div>
+
+  </div>
+</div>
+<!-- END FORM -->
+
+{% endblock %}

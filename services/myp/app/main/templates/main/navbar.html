@@ -1,0 +1,40 @@
+<!-- Image and text -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-light mb-2">
+  <a class="navbar-brand" href="{{ url_for('main.index') }}">
+    <i class="fas fa-map-marked-alt"></i> MYP
+  </a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" id="mapping" href="{{ url_for('main.create_map') }}">Create Map <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="help" href="{{ url_for('main.how_works') }}">How it works</a>
+      </li>
+      {% if current_user.is_authenticated %}
+      <li class="nav-item">
+        <a class="nav-link" id="logout" href="{{ url_for('auth.log_out') }}">LogOut</a>
+      </li>
+      {% else %}
+      <li class="nav-item">
+        <a class="nav-link" id="register" href="{{ url_for('auth.register') }}">Sign Up!</a>
+      </li>
+      {% endif %}
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Services
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{{url_for('main.map_by_track')}}">Tags using GPX</a>
+          <a class="dropdown-item" href="#">Add Tags to Photos</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{{url_for('auth.register')}}">Register</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+{% include 'messages.html' %}

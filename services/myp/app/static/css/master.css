@@ -1,0 +1,186 @@
+.btn-primary {
+  background-color: #ff8008 !important;
+}
+
+body,
+.landing {
+  background-image: url("../img/serveimage.jpeg");
+  background-image:
+    linear-gradient(to left, rgba(255, 200, 55, 0.85), rgba(255, 128, 8, 0.5)),
+    url("../img/serveimage.jpeg");
+  background-image:
+    -webkit-linear-gradient(to left, rgba(255, 200, 55, 0.85), rgba(255, 128, 8, 0.5)), f url("../img/serveimage.jpeg");
+  height: 100vh;
+  background-size: cover;
+  background-repeat: no-repeat;
+  /* overflow: hidden; */
+}
+
+.navbar {
+  background-color: rgba(0, 0, 0, 0) !important;
+  border-bottom-color: #000 !important;
+}
+
+/* LANDING PAGE */
+.landing {
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.landing h2 {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 45px;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+/* MODAL FOR SERVICES */
+#servicesModal {
+  margin-top: 10% !important;
+}
+
+.services-modal {
+  text-align: center !important;
+}
+
+.landing-service {
+  font-size: 100px;
+  text-align: center;
+  /* color: rgba(255, 200, 55, 0.85); */
+}
+
+.smaller {
+  font-size: 15px;
+  position: relative;
+  top: 20px;
+}
+
+/* UPLOAD CREATE MAP PAGE */
+#create-map {
+  height: 100vh;
+  overflow: hidden !important;
+}
+
+.inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.label-upload {
+  outline: 2px dashed #92b0b3;
+  outline-offset: -10px;
+  -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+  transition: outline-offset .15s ease-in-out, background-color .15s linear;
+  padding: 120px 0px 85px 35%;
+  text-align: center !important;
+  margin: 0;
+  width: 100% !important;
+}
+
+.label-upload:hover {
+  outline: 2px dashed greenyellow;
+}
+
+.label-upload:focus {
+  outline: 2px dashed #92b0b3;
+  outline-offset: -10px;
+  -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+  transition: outline-offset .15s ease-in-out, background-color .15s linear;
+  border: 1px solid #92b0b3;
+}
+
+.label-upload {
+  position: relative
+}
+
+.label-upload:after {
+  pointer-events: none;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 50px;
+  right: 0;
+  height: 56px;
+  content: "";
+  background-image: url(https://image.flaticon.com/icons/png/128/109/109612.png);
+  display: block;
+  margin: 0 auto;
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+
+/* .label-upload:after {
+  font-family: FontAwesome;
+  content: "\f093";
+  color: rgb(43, 0, 255);
+  z-index: -2px;
+  font-size: 5em;
+} */
+.color input {
+  background-color: #f1f1f1;
+}
+
+.label-upload:before {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  pointer-events: none;
+  width: 100%;
+  right: 0;
+  height: 57px;
+  content: "Choose file or drag it here. ";
+  display: block;
+  margin: 0 auto;
+  color: #ef473a;
+  font-weight: 600;
+  text-transform: capitalize;
+  text-align: center;
+}
+
+.feedback {
+  color: red !important;
+}
+
+/* LOADING CIRCULAR BAR */
+#circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150px;
+  height: 150px;
+}
+
+.loader {
+  width: calc(100% - 0px);
+  height: calc(100% - 0px);
+  border: 8px solid #162534;
+  border-top: 8px solid #cb2d3e;
+  border-radius: 50%;
+  animation: rotate 5s linear infinite;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+#loading {
+  position: absolute !important;
+  text-align: center !important;
+  animation: 0 !important;
+}

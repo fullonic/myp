@@ -1,0 +1,39 @@
+version:          "3.7"
+
+services:
+  # Creates a service called myp
+  myp:
+    build:
+      context:    ./services/myp
+      dockerfile: Dockerfile
+    # This makes the container being auto update when changes happen in myp code base
+    volumes:
+      - "./services/myp:/home/myp/app"
+    ports:
+      # First port is the client one
+      - 5001:5000
+    env_file:
+      - app-dev.env
+    # Same name as the service name
+    depends_on:
+      - myp-db
+
+  # Builds DB from local costum db image
+  myp-db:
+    build:
+      context:    ./services/myp/app/db
+      dockerfile: Dockerfile
+    ports:
+      # Postgres will be available on port 5435 on the host machine and on port 5432 for services running in other containers.
+      - 5435:5432
+    env_file:
+      - db-dev.env
+  nginx:
+    build:
+      context:    ./services/nginx
+      dockerfile: Dockerfile
+    restart:      always
+    ports:
+      - 80:80
+    depends_on:
+      - myp

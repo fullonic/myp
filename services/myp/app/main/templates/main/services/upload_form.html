@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+
+
+{% block body %}
+{% include 'navbar.html' %}
+
+<section id="create_map" class="ml-5 mr-5 create-map">
+  <div class="row">
+    <!-- FORM CARD -->
+    <div class="col-md-3 mb-2 ">
+      <div class="card">
+        <div class="card-body">
+          <form id="form-mapping" method="post" action="{{url_for('main.create_map')}}" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+              <div class="row mt-2 files">
+                {{ form.files(class_="inputfile", accept=".png, .jpg, .jpeg, .gif, .tiff", **{"onchange":"checkSize()"}) }}
+                <label class="label-upload" for="upload"></label>
+                <small class="feedback ml-auto text-muted" id="feedback"></small>
+              </div>
+              <div class="row mt-2">
+                <small class="text-muted d-inline">Choose a project name:</small>
+                {{ form.project_name(class_="form-control files", placeholder="Project Name") }}
+              </div>
+              <div class="row mt-2">
+                <small class="text-muted d-inline">Select your markers color:</small>
+                {{ form.color(class_="form-control") }}
+              </div>
+              <div class="row mt-2 d-block">
+                <small class="text-muted d-inline">Select your map tiles:</small>
+                {{ form.tiles(class_="form-control") }}
+              </div>
+
+              <!-- PROGRESS BAR -->
+              <div id="progress" class="progress d-none" style="width: 100%;">
+                <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0</div>
+              </div>
+
+              <button id="submitBtn" type="submit" class="mt-3 btn btn-primary btn-block" value="Submit">
+                Upload</button>
+              <a id="showMap" href="{{ url_for('main.get_file', token=session['token']) }}" type="button" class="mt-3 btn btn-success btn-block d-none">Download File</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-1">
+
+    </div>
+    <!-- MAP FRAME -->
+    <div class="col-md-8 mb-2 ">
+      <iframe src="{{ url_for('main.show_map') }}" class="shadow border border-warning rounded" width="100%" height="100%"></iframe>
+      <!-- <div class="col-md-8 mb-2 shadow border border-warning rounded" width="100%" height="100%">
+      {% include "show_map.html" %}
+    </div> -->
+    </div>
+  </div>
+</section>
+
+<script type="text/javascript">
+  function checkSize() {
+    if (typeof FileReader !== "undefined") {
+      var fi = document.getElementById('upload');
+      var size = 0;
+
+      for (var i = 0; i <= fi.files.length - 1; i++) {
+
+        var fname = fi.files.item(i).name; // THE NAME OF THE FILE.
+        var fsize = fi.files.item(i).size; // THE SIZE OF THE FILE.
+        size = size + fsize
+      }
+      console.log(size / 1024 / 1024);
+      // check file size
+    };
+    document.getElementById("feedback").innerHTML = "Files uploaded:" + fi.files.length + " || Total size: " + Math.round(size / 1024 / 1024) + " MB";
+    size = 0;
+  }
+  // $('#map_preview').load('show_map');
+</script>
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+
+{% include "messages.html" %}
+{% block body %}
+
+
+<body>
+  <div class="landing">
+    <div class="row">
+      <h2 class="text-light">A simply and easy way <br> to map your geo tagged photos</h2>
+    </div>
+    <div class="row mt-2">
+      <a id="get_starting" href="#" class="btn btn-outline-light btn-start" data-toggle="modal" data-target="#servicesModal">Lets map!</a>
+      <a href="{{ url_for('main.how_works') }}" class="btn btn-danger ml-3 btn-start">How it works</a>
+    </div>
+  </div>
+</body>
+
+
+<!-- Modal -->
+<div class="modal fade" id="servicesModal" tabindex="-1" role="dialog" aria-labelledby="servicesModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content text-center">
+      <h5 class="modal-title text-center m-3" id="servicesModalLabel">Select a service</h5>
+      <div class="modal-body p-3">
+        <div class="row">
+          <div class="col-6">
+            <div class="card">
+              <div class="card-body serviceBtn">
+                <a href="{{ url_for('main.map_by_track')}}">
+                  <i class="fas fa-route landing-service">
+                  </i>
+                  <p class="smaller underlineHover">Tag with gpx track</p>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card">
+              <div class="card-body serviceBtn">
+                <a href="{{ url_for('main.create_map')}}">
+                  <i class="fas fa-map-marked-alt landing-service">
+                    <p class="smaller underlineHover">Geo tagged photos</p>
+                  </i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

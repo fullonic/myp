@@ -1,0 +1,3 @@
+CREATE DATABASE myp_prod;
+CREATE DATABASE myp_dev;
+CREATE DATABASE myp_test;

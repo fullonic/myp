@@ -1,0 +1,16 @@
+folium
+gpxpy
+flask
+Flask-RESTful==0.3.7
+Flask-SQLAlchemy
+flask-login
+flask_debugtoolbar
+flask_migrate
+flask_bcrypt
+psycopg2-binary
+Flask-Testing
+gunicorn
+pytest
+coverage
+flake8===3.7.7
+black

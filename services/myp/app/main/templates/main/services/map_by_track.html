@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+
+
+{% block body %}
+{% include 'navbar.html' %}
+
+
+<!-- FORM -->
+<div class="col-md-5 mb-2 ">
+  <div class="card mr-auto ml-auto">
+    <div class="card-body">
+      <form id="form-track" , method="post" action="{{url_for('main.map_by_track')}}" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+          <div class="row mt-2">
+            <small class="text-muted d-inline">Choose a project name:</small>
+            {{ form.project_name(class_="form-control files", placeholder="Project Name") }}
+          </div>
+          <div class="row mt-2">
+            {{ form.photos(class_="input", accept=".png, .jpg, .jpeg, .gif, .tiff") }}
+          </div>
+          <div class="row mt-2">
+            {{ form.track(class_="input", accept=".gpx" ) }}
+          </div>
+          <div class="row mt-2">
+            {{ form.time_difference(class_="input") }}
+          </div>
+          <div class="row mt-2 form-check">
+            <label class="form-check-label" for="defaultCheck1">
+              Would you like map your photos?
+            </label>
+            {{ form.mapping(class_="form-check-input col-2") }}
+          </div>
+          <!-- PROGRESS BAR -->
+          <div id="progress" class="progress d-none" style="width: 100%;">
+            <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0</div>
+          </div>
+
+          <button id="submitBtnGPX" type="submit" onclick="" class="mt-3 btn btn-primary btn-block" value="Submit">
+            Upload</button>
+          <a id="download_gpx" onclick="fileDownload()" href="#" type="button" class="mt-3 btn btn-success btn-block">Download File</a>
+
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- END FORM -->
+{% endblock %}

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <title>Python Flask Multiple Files Upload Example</title>
+
+</head>
+
+<body>
+
+  <div class="row mt-5">
+    <div class="col-md-6">
+      <h2>Select file(s) to upload</h2>
+      <p>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class=flashes>
+          {% for message in messages %}
+          <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+      </p>
+      <form method="post" action="/" enctype="multipart/form-data">
+        <input type="text" name="id" value="" placeholder="Insert your ID">
+        <input type="text" name="project_name" value="" placeholder="Insert a project name">
+        <dl>
+          <input id="upload" onchange="checkSize()" class="mt-1" type="file" name="files" multiple="true" autocomplete="off" required>
+        </dl>
+        <button id="submitBtn" type="submit" class="ml-5 btn btn-primary" value="Submit">
+          Upload
+        </button>
+        <a id="showMap" href="{{ url_for('map') }}" type="button" class="ml-5 btn btn-primary d-none">See map</a>
+        <!-- <a id="showMap" data-toggle="modal" data-target="#exampleModal" type="button"
+        class="ml-5 btn btn-primary d-none">See map</a> -->
+
+      </form>
+
+      <div id="progress" class="progress d-none" style="width: 50%;">
+        <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <iframe src="{{ url_for('map')}}" width="500px" height="500px"></iframe>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}" charset="utf-8"></script>
+
+
+  <script type="text/javascript">
+    function checkSize() {
+      if (typeof FileReader !== "undefined") {
+        var fi = document.getElementById('upload');
+        var size = 0;
+
+        for (var i = 0; i <= fi.files.length - 1; i++) {
+
+          var fname = fi.files.item(i).name; // THE NAME OF THE FILE.
+          var fsize = fi.files.item(i).size; // THE SIZE OF THE FILE.
+          size = size + fsize
+        }
+        console.log(size / 1024 / 1024);
+        size = 0;
+        // check file size
+      }
+    }
+  </script>
+</body>
+
+</html>
