@@ -53,7 +53,7 @@ body,
 }
 
 .landing-service {
-  font-size: 100px;
+  font-size: 90px !important;
   text-align: center;
   /* color: rgba(255, 200, 55, 0.85); */
 }

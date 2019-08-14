@@ -128,15 +128,16 @@ function getFile() {
   var project_name = document.getElementById("project_name").value;
 
   $.ajax({
-        type: 'POST',
-        url: "/get_file/" + project_name + "/",
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(msg) {
-          var btn = document.getElementById('download_gpx');
-          var url_ = "/get_file/" + msg["url"] + "/";
-          console.log(url_);
-          btn.href = url_
-        }
-      }
+    type: 'POST',
+    url: "/get_file/" + project_name + "/",
+    data: project_name,
+    processData: false,
+    contentType: false,
+    success: function(msg) {
+      var btn = document.getElementById('download_gpx');
+      var url_ = "/get_file/" + msg["url"] + "/";
+      console.log(url_);
+      btn.href = url_
+    }
+  });
+}

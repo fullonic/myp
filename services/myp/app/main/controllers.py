@@ -218,8 +218,7 @@ def get_file(token):
         project = TagGPX.query.filter_by(project_name=token).first()
 
         return dict(status="success", url=project.hash_url)
-    print("TOKEN", token)
-    print("project", project)
+    project = TagGPX.query.filter_by(hash_url=token).first()
     return send_from_directory(os.path.dirname(project.download_file),
                                os.path.basename(project.download_file),
                                as_attachment=True)
