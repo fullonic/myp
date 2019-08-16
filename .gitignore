@@ -4,3 +4,4 @@ venv
 htmlcov
 MYP
 tests/data
+TODO.txt

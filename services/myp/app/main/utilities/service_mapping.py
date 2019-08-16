@@ -15,6 +15,7 @@ from app.main.models import TagGPX, Mapping, Download
 from .utils import to_degrees, to_datetime, zipper
 
 
+
 def to_json(
     project_name: str, lat: float, lng: float, name: str, date: str, time_: str
 ):
@@ -144,10 +145,17 @@ def generate_map(
     download.token = secrets.token_hex(16)
     download.user_id = map_project.user_id
     download.project_name = map_project.project_name
+    download.ensure_unique_token()
+#
+# try:
+#     db.session.add(download)
+#     db.session.commit()
+# except Exception as e:
+#     db.session.rollback()
+#     download.token = secrets.token_hex(16)
+#     db.session.add(download)
+#     db.session.commit()
 
-    db.session.add(download)
-
-    db.session.commit()
     if service_type == "mapping":
         return zipper(mapping_project_id=map_project.id, service_type="mapping")
     elif service_type == "gpx_mapping":

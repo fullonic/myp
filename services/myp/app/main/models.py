@@ -1,4 +1,7 @@
+"""Application core data base models."""
+
 import os
+import secrets
 
 from flask import current_app
 from sqlalchemy.sql import func
@@ -72,4 +75,22 @@ class Download(db.Model):
     user_id = db.Column(db.Integer())
     project_name = db.Column(db.String(64))
     file_path = db.Column(db.String(128))
-    token = db.Column(db.String(128))
+    token = db.Column(db.String(128), unique=True)
+
+    def ensure_unique_token(self):
+        """Force unique token into download table."""
+        while True:
+            try:
+                db.session.add(self)
+                db.session.commit()
+                break
+            except Exception as e:
+                print("DB ERROR\n", e)  # Must be logged into log file
+                db.session.rollback()
+                self.token = secrets.token_hex(16)
+# download = Download()
+# download.file_path = '("{gpx_project.user.folder_gpx}/{project_name}/{project_name}.zip")'
+# download.token = "TOKEN"
+# download.user_id = 10
+# download.project_name = "gpx_project.project_name"
+# download.ensure_unique_token()

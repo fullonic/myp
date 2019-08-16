@@ -231,8 +231,6 @@ def show_map():
     return render_template("show_map.html")
 
 
-
-
 @main_blueprint.route("/get_file/<token>/", methods=["GET", "POST"])
 def get_file(token):
     """Send zip file to user for downloading."""

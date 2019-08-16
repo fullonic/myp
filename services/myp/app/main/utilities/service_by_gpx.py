@@ -169,6 +169,6 @@ def insert_tag_photos(folder: os.path = None, proj_id=None, map=False) -> None:
         download.user_id = gpx_project.user_id
         download.project_name = gpx_project.project_name
 
-        db.session.add(download)
-        db.session.commit()
+        download.ensure_unique_token()
+
         zipper(gpx_project_id=proj_id, service_type="gpx")
