@@ -72,7 +72,9 @@ def map_photos(gallery_folder: os.path, project_id: int, service_type: str = "ma
     geojson_file = (
         f"{project.user.folder_mapping}/{project_name}/geo_files/{project_name}.geojson"
     )
+    # CREATE GEOJSON FILE
     to_geojson(data, geojson_file)
+    # GENERATE MAP
     generate_map(geojson_file, project_name, project.user_id, project_id, service_type)
 
 

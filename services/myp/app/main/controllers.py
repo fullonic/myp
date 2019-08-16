@@ -38,6 +38,7 @@ from .utilities.utils import (
     allowed_track_file,
 )
 from .utilities.service_by_gpx import insert_tag_photos
+from .utilities.service_mapping import map_photos
 
 main_blueprint = Blueprint(
     "main",
@@ -70,9 +71,96 @@ def how_works():
 ##########################
 
 
+# MAPPING
+@main_blueprint.route("/mapping", methods=["POST", "GET"])
+@login_required
+def mapping():
+    """MAP SERVICE."""
+    form = ProjectForm()
+    if request.method == "POST" and form.validate_on_submit():
+        project = Mapping()
+        name = request.form["project_name"]
+        project.project_name = name
+        project.color = request.form["color"]
+        project.tiles = request.form["tiles"]
+        project.user_id = current_user.id
+        # SET UP PROJECT FOLDERS
+        project.create_folders(name)
+        project.download_file = (
+            f"{project.user.folder_mapping}/{name}/delivery/{name}.zip"
+        )
+
+        """MISSING SAVE THE PHOTOS TO FOLDER"""
+        photos = request.files.getlist("files")
+        print("USER PHOTOS", photos)
+        folder = f"{current_user.folder_mapping}/{name}/requests"
+        for file in photos:
+            if file and allowed_photo_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(folder, filename))
+
+        # ADD PROJECT TO DB
+        db.session.add(project)
+        db.session.commit()
+        print("PROJECT ID", project.id)
+        map_photos(folder, project.id, service_type="mapping")
+    return render_template("services/mapping.html", form=form)
+
+
+# MAP BY GPX FILE
+@main_blueprint.route("/map_by_track", methods=["POST", "GET"])
+@login_required
+def map_by_track():
+    """Insert tags using gpx file service."""
+    form = MapByGPXForm()
+    if request.method == "POST":
+        if form.validate_on_submit():
+            # Insert new project data into DB table
+            project = TagGPX()
+            project.project_name = request.form["project_name"]
+            project.email = current_user.email
+            project.time_difference = int(request.form["time_difference"])
+            project.user_id = current_user.id
+            db.session.add(project)
+            db.session.commit()
+
+            # Save file to file system
+            photos = request.files.getlist("photos")
+            track_file = request.files.getlist("track")
+
+            # NOTE: needs to handle same name project appending a number to avoid replacements
+            folder = project.create_folder
+
+            for file in track_file:
+                if allowed_track_file(file.filename):
+                    track_name = secure_filename(file.filename)
+                    file.save(os.path.join(folder, track_name))
+            for file in photos:
+                if file and allowed_photo_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    file.save(os.path.join(folder, filename))
+            mapping = request.form.get("mapping", None)
+
+            if mapping:
+                print("INSERTING MAP STYLING TABLE")
+                map = Mapping()
+                map.project_name = project.project_name
+                map.user_id = project.user_id
+                project.map = True  # Flag to decide how to build download url
+                map.create_folders(project.project_name)
+                db.session.add(project)
+                db.session.add(map)
+                db.session.commit()
+
+            # Insert gpx information into photos
+            insert_tag_photos(folder, proj_id=project.id, map=project.map)
+            return redirect(url_for("main.map_by_track", token="FUNNY"))
+    return render_template("services/map_by_track.html", form=form, token="NONE")
+
+
 @main_blueprint.route("/create_map", methods=["POST", "GET"])
 def create_map():
-    """Create basic project landing page."""
+    """Create basic map without be registered."""
     form = ProjectForm()
     try:
         user_id = current_user.id
@@ -123,57 +211,6 @@ def create_map():
     return render_template("services/upload_form.html", form=form)
 
 
-# MAP BY GPX FILE
-@main_blueprint.route("/map_by_track", methods=["POST", "GET"])
-@login_required
-def map_by_track():
-    """Insert tags using gpx file service."""
-    form = MapByGPXForm()
-    if request.method == "POST":
-        if form.validate_on_submit():
-            # Insert new project data into DB table
-            project = TagGPX()
-            project.project_name = request.form["project_name"]
-            project.email = current_user.email
-            project.time_difference = int(request.form["time_difference"])
-            project.user_id = current_user.id
-            db.session.add(project)
-            db.session.commit()
-
-            # Save file to file system
-            photos = request.files.getlist("photos")
-            track_file = request.files.getlist("track")
-
-            # NOTE: needs to handle same name project appending a number to avoid replacements
-            folder = project.create_folder
-
-            for file in track_file:
-                if allowed_track_file(file.filename):
-                    track_name = secure_filename(file.filename)
-                    file.save(os.path.join(folder, track_name))
-            for file in photos:
-                if file and allowed_photo_file(file.filename):
-                    filename = secure_filename(file.filename)
-                    file.save(os.path.join(folder, filename))
-            mapping = request.form.get("mapping", None)
-
-            if mapping:
-                print("INSERTING MAP STYLING TABLE")
-                map = Mapping()
-                map.project_name = project.project_name
-                map.user_id = project.user_id
-                project.map = True
-                map.create_folders(project.project_name)
-                db.session.add(project)
-                db.session.add(map)
-                db.session.commit()
-
-            # Insert gpx information into photos
-            insert_tag_photos(folder, proj_id=project.id, map=project.map)
-            return redirect(url_for("main.map_by_track", token="FUNNY"))
-    return render_template("services/map_by_track.html", form=form, token="NONE")
-
-
 ##########################
 # HELPERS ROUTES
 ##########################
@@ -219,6 +256,8 @@ def get_file(token):
 
         return dict(status="success", url=project.hash_url)
     project = TagGPX.query.filter_by(hash_url=token).first()
-    return send_from_directory(os.path.dirname(project.download_file),
-                               os.path.basename(project.download_file),
-                               as_attachment=True)
+    return send_from_directory(
+        os.path.dirname(project.download_file),
+        os.path.basename(project.download_file),
+        as_attachment=True,
+    )
