@@ -8,11 +8,7 @@ $(document).ready(function() {
     var progressDiv = document.getElementById("progress");
     progressDiv.classList.remove("d-none");
 
-    var download_file = document.getElementById("download_file");
-
-
-
-    var mappingSubmit = document.getElementById("submitBtn");
+    var mappingSubmit = document.getElementById("mappingSubmit");
     $("#mappingSubmit").attr('disabled', true).text("Uploading...").html(
       `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...`
     );
@@ -50,8 +46,11 @@ $(document).ready(function() {
         $("#mappingSubmit").attr('disabled', true).text("Upload Complete!");
         mappingSubmit.classList.remove("btn-danger");
         mappingSubmit.classList.add("btn-success");
+        getFile();
         alert('File uploaded!');
-        download_file.classList.remove("d-none");
+        // GET URL FOR DOWNLOAD FILE
+        var btn = document.getElementById('download_file');
+        btn.classList.remove("d-none");
       }
     });
 
@@ -128,6 +127,7 @@ function nFiles() {
 
 function getFile() {
   var project_name = document.getElementById("project_name").value;
+  console.log(project_name);
 
   $.ajax({
     type: 'POST',

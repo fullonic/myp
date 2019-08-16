@@ -231,21 +231,8 @@ def show_map():
     return render_template("show_map.html")
 
 
-# @main_blueprint.route("/get_file/<token>", methods=["GET"])
-# def get_file(token):
-#     """Send zip file to user for downloading."""
-#     s = Serializer(current_app.config["SECRET_KEY"])
-#     try:
-#         user_id = s.loads(token)["user_id"]
-#     except Exception() as e:
-#         print(e)  # NOTE:  Needs to be logged.
-#         return "None"
-#     user = User.query.get(user_id)
-#     if user:
-#         # Do things with registered users
-#         pass
-#     file_root = f"{os.getcwd()}/{current_app.config['DELIVERY_FOLDER'][1:]}"
-#     return send_from_directory(file_root, session["zip_file"], as_attachment=True)
+
+
 @main_blueprint.route("/get_file/<token>/", methods=["GET", "POST"])
 def get_file(token):
     """Send zip file to user for downloading."""
@@ -253,6 +240,7 @@ def get_file(token):
         project = Download.query.filter_by(project_name=token).first()
         return dict(status="success", url=project.token)
     project = Download.query.filter_by(token=token).first()
+
     print(project)
     print(project.file_path)
     return send_from_directory(
@@ -260,3 +248,20 @@ def get_file(token):
         os.path.basename(project.file_path),
         as_attachment=True,
     )
+
+
+@main_blueprint.route("/one_time_url/<token>", methods=["GET"])
+def one_time_url(token):
+    """Send zip file to user for downloading."""
+    s = Serializer(current_app.config["SECRET_KEY"])
+    try:
+        user_id = s.loads(token)["user_id"]
+    except Exception() as e:
+        print(e)  # NOTE:  Needs to be logged.
+        return "None"
+    user = User.query.get(user_id)
+    if user:
+        # Do things with registered users
+        pass
+    file_root = f"{os.getcwd()}/{current_app.config['DELIVERY_FOLDER'][1:]}"
+    return send_from_directory(file_root, session["zip_file"], as_attachment=True)
