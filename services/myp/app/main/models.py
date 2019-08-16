@@ -62,3 +62,14 @@ class Mapping(db.Model):
 
         db.session.add(self)
         db.session.commit()
+
+
+class Download(db.Model):
+    """Model to have information about file saved place."""
+
+    __tablename__ = "download"
+    id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer())
+    project_name = db.Column(db.String(64))
+    file_path = db.Column(db.String(128))
+    token = db.Column(db.String(128))

@@ -224,11 +224,11 @@ def show_map():
     map.save("app/main/templates/main/show_map.html")
 
 
-def zipper(mapping_project_id=None, gpx_project_id=None, service_type="mapping"):
+def zipper(mapping_project_id=None, gpx_project_id=None, service_type=None):
     """Generate a zip file to be send to the user with folder structure."""
     origin = os.getcwd()
 
-    def service_gpx(origin, gpx_project_id, *args):
+    def service_gpx(origin, gpx_project_id, _):
         project = TagGPX.query.filter_by(id=gpx_project_id).first()
         zip_file = project.download_file
         gallery_folder = os.path.dirname(project.download_file)
@@ -237,26 +237,39 @@ def zipper(mapping_project_id=None, gpx_project_id=None, service_type="mapping")
         with ZipFile(zip_file, "w") as zip:
             for file in files:
                 zip.write(file)
-        return gallery_folder
+        # return gallery_folder
 
-    def service_gpx_mapping(origin, gpx_project_id, mapping_project_id):
-        # CREATE ZIP FOLDER WITH TAGGED PHOTOS
-        service_gpx(origin, gpx_project_id)
-        # ZIP MAP AND PHOTO GALLERY FOLDER
+    def service_mapping(origin, _, mapping_project_id, type_=None):
         project = Mapping.query.filter_by(id=mapping_project_id).first()
-        zip_file = project.download_file
+        zip_file = project.download_file.split(".")[0]
         base = os.path.dirname(zip_file)
         gallery_folder = f"{base}/photos_{project.project_name}"
         os.mkdir(gallery_folder)
+        if not type_:
+            source = f"{project.user.folder_mapping}/{project.project_name}/delivery"
+            zip_file = f"{source}/{project.project_name}"
+            shutil.make_archive(zip_file, "zip", source)
 
-        # Move photos to mapping delivery folder
-        source = os.listdir(f"{project.user.folder_gpx}/{project.project_name}/")
-        destination = f"{base}/photos_{project.project_name}"
-        for file in source:
-            if file.endswith(".jpg"):
-                shutil.move(file, destination)
-        shutil.make_archive(zip_file, "zip", base)
+        else:
+            source = os.listdir(f"{project.user.folder_gpx}/{project.project_name}/")
+            destination = f"{base}/photos_{project.project_name}"
+            for file in source:
+                if file.endswith(".jpg"):
+                    # Move photos to mapping delivery folder
+                    shutil.move(file, destination)
+            shutil.make_archive(zip_file, "zip", base)
 
-    service = {"gpx": service_gpx, "gpx_mapping": service_gpx_mapping}
+    def service_gpx_mapping(origin, gpx_project_id, mapping_project_id):
+        # CREATE ZIP FOLDER WITH TAGGED PHOTOS
+        service_gpx(origin, gpx_project_id, None)
+        # ZIP MAP AND PHOTO GALLERY FOLDER
+        service_mapping(origin, None, mapping_project_id, type_="mixed")
 
+    service = {
+        "gpx": service_gpx,
+        "gpx_mapping": service_gpx_mapping,
+        "mapping": service_mapping,
+    }
+
+    print("SET UP", mapping_project_id, gpx_project_id, service_type)
     service[service_type](origin, gpx_project_id, mapping_project_id)

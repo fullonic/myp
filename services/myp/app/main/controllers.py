@@ -28,7 +28,7 @@ from werkzeug.utils import secure_filename
 
 from app import db
 from .forms import ProjectForm, MapByGPXForm
-from .models import TagGPX, Mapping
+from .models import TagGPX, Mapping, Download
 from ..auth.models import User
 from .utilities.utils import (
     zip_folder,
@@ -92,7 +92,6 @@ def mapping():
 
         """MISSING SAVE THE PHOTOS TO FOLDER"""
         photos = request.files.getlist("files")
-        print("USER PHOTOS", photos)
         folder = f"{current_user.folder_mapping}/{name}/requests"
         for file in photos:
             if file and allowed_photo_file(file.filename):
@@ -102,7 +101,6 @@ def mapping():
         # ADD PROJECT TO DB
         db.session.add(project)
         db.session.commit()
-        print("PROJECT ID", project.id)
         map_photos(folder, project.id, service_type="mapping")
     return render_template("services/mapping.html", form=form)
 
@@ -252,12 +250,13 @@ def show_map():
 def get_file(token):
     """Send zip file to user for downloading."""
     if request.method == "POST":
-        project = TagGPX.query.filter_by(project_name=token).first()
-
-        return dict(status="success", url=project.hash_url)
-    project = TagGPX.query.filter_by(hash_url=token).first()
+        project = Download.query.filter_by(project_name=token).first()
+        return dict(status="success", url=project.token)
+    project = Download.query.filter_by(token=token).first()
+    print(project)
+    print(project.file_path)
     return send_from_directory(
-        os.path.dirname(project.download_file),
-        os.path.basename(project.download_file),
+        os.path.dirname(project.file_path),
+        os.path.basename(project.file_path),
         as_attachment=True,
     )

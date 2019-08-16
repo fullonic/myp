@@ -18,7 +18,7 @@ import gpxpy
 import gpxpy.gpx
 
 from app import db
-from app.main.models import TagGPX
+from app.main.models import TagGPX, Download
 from .service_mapping import map_photos
 
 # Set up objects
@@ -149,8 +149,8 @@ def insert_tag_photos(folder: os.path = None, proj_id=None, map=False) -> None:
     gpx_project.download_file = (
         f"{gpx_project.user.folder_gpx}/{project_name}/{project_name}.zip"
     )
-    gpx_project.hash_url = secrets.token_hex(16)
-
+    hash = secrets.token_hex(16)
+    gpx_project.hash_url = hash
 
     db.session.add(gpx_project)
     db.session.commit()
@@ -160,4 +160,15 @@ def insert_tag_photos(folder: os.path = None, proj_id=None, map=False) -> None:
     if map:
         map_photos(folder, proj_id, service_type="gpx_mapping")
     else:
+        # NEEDS TO BE REFRACTED
+        download = Download()
+        download.file_path = (
+            f"{gpx_project.user.folder_gpx}/{project_name}/{project_name}.zip"
+        )
+        download.token = hash
+        download.user_id = gpx_project.user_id
+        download.project_name = gpx_project.project_name
+
+        db.session.add(download)
+        db.session.commit()
         zipper(gpx_project_id=proj_id, service_type="gpx")
