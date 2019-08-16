@@ -23,7 +23,10 @@
 
     <!-- Remind Passowrd -->
     <div id="formFooter">
-      <a class="underlineHover" href="#">Forgot Password?</a>
+      <small class="underlineHover">Forgot Password? <a href="{{ url_for('auth.login') }}">click here.</a></small>
+      <br>
+      <small class="underlineHover">New to MYP? <a href="{{ url_for('auth.register') }}">Create an account.</a></small>
+
     </div>
 
   </div>
