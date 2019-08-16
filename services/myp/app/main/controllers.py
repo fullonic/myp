@@ -43,7 +43,7 @@ from .utilities.service_mapping import map_photos
 main_blueprint = Blueprint(
     "main",
     __name__,
-    template_folder="./templates/main",
+    template_folder="../templates/main",
     static_folder="./static",
     url_prefix="/",
 )
