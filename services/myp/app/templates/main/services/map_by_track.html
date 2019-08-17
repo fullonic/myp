@@ -28,12 +28,21 @@
           <div data-step="3" data-intro="Add your journey file track (currently only .gpx files are accepted)" class="row mt-2">
             {{ form.track(class_="input", accept=".gpx" ) }}
           </div>
-          <div data-step="4" data-intro="Are your photos timestamp and your gpx track time matching? If not, insert here the time difference using your photo time as reference. For example: if your photos time are 1 hour ahead, choose +01:00" class="row mt-2">
-            {{ form.time_difference(class_="input") }}
+          <div class="row mt-2">
+            <div data-step="4" data-intro="Are your photos timestamp and your gpx track time matching? If not, insert here the time difference using your photo time as reference. For example: if your photos time are 1 hour ahead, choose +01:00"
+              class="col-8">
+              {{ form.time_difference(class_="input") }}
+            </div>
+            <div data-step="5" data-intro="If time zone is 05:30 choose + 05:00 and then check this box to add the 30 minutes" class="col-4">
+              {{ form.half_hour(class_="form-check-input") }}
+              <label class="form-check-label" for="half_hour">
+                + 00:30
+              </label>
+            </div>
 
           </div>
-          <div class="row mt-2 form-check" data-step="5" data-intro="By default, all your uploaded will be geo tagged using your gpx track as reference. If you would like to have also your photos mapped, just select this checkbox">
-            <label class="form-check-label" for="defaultCheck1">
+          <div class="row mt-2 form-check" data-step="6" data-intro="By default, all your uploaded will be geo tagged using your gpx track as reference. If you would like to have also your photos mapped, just select this checkbox">
+            <label class="form-check-label" for="map-or-not">
               Would you like map your photos?
             </label>
             {{ form.mapping(class_="form-check-input col-2") }}

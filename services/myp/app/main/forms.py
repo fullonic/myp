@@ -56,7 +56,37 @@ class MapByGPXForm(Form):
     track = FileField(
         label="Upload your track file", id="track", validators=[DataRequired()]
     )
-    time_difference = StringField("Project name", validators=[DataRequired()])
-    mapping = BooleanField(
-        label="Would like to map your photos? ", id="map-or-not",
+    time_difference = SelectField(
+        "time_difference",
+        validators=[DataRequired()],
+        choices=[
+            ("- 12:00", "- 12:00"),
+            ("- 11:00", "- 11:00"),
+            ("- 10:00", "- 10:00"),
+            ("- 9:00", "- 9:00"),
+            ("- 8:00", "- 8:00"),
+            ("- 7:00", "- 7:00"),
+            ("- 6:00", "- 6:00"),
+            ("- 5:00", "- 5:00"),
+            ("- 4:00", "- 4:00"),
+            ("- 3:00", "- 3:00"),
+            ("- 2:00", "- 2:00"),
+            ("- 1:00", "- 1:00"),
+            ("  0:00", "  0:00"),
+            ("+ 1:00", "+ 1:00"),
+            ("+ 2:00", "+ 2:00"),
+            ("+ 3:00", "+ 3:00"),
+            ("+ 4:00", "+ 4:00"),
+            ("+ 5:00", "+ 5:00"),
+            ("+ 6:00", "+ 6:00"),
+            ("+ 7:00", "+ 7:00"),
+            ("+ 8:00", "+ 8:00"),
+            ("+ 9:00", "+ 9:00"),
+            ("+ 10:00", "+ 10:00"),
+            ("+ 11:00", "+ 11:00"),
+            ("+ 12:00", "+ 12:00"),
+        ],
+        default="  0:00",
     )
+    half_hour = BooleanField(label="Add 30 minutes? ", id="half_hour")
+    mapping = BooleanField(label="Would like to map your photos? ", id="map-or-not")

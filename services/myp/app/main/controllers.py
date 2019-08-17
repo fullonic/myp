@@ -117,8 +117,9 @@ def map_by_track():
             project = TagGPX()
             project.project_name = request.form["project_name"]
             project.email = current_user.email
-            project.time_difference = int(request.form["time_difference"])
             project.user_id = current_user.id
+            half_hour = request.form.get("half_hour", 0)
+            project.set_time_difference(request.form["time_difference"], int(half_hour))
             db.session.add(project)
             db.session.commit()
 

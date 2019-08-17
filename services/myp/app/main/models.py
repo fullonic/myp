@@ -16,6 +16,8 @@ class TagGPX(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     project_name = db.Column(db.String(64), nullable=False)
     time_difference = db.Column(db.Integer(), default=0)
+    half_hour = db.Column(db.Integer())
+    time_ref = db.Column(db.String(2))
     email = db.Column(db.String(256), nullable=False)
     created = db.Column(db.DateTime(128), default=func.now())
     download_file = db.Column(db.String(256))
@@ -30,6 +32,17 @@ class TagGPX(db.Model):
         folder = f"{self.user.folder_gpx}/{self.project_name}"
         os.mkdir(folder)
         return folder
+
+    def set_time_difference(self, _time, half_hour):
+        """Clean form time difference user input and insert into db."""
+        clean = _time.split(":")[0].split(" ")
+        self.time_ref = clean[0]
+        self.half_hour = half_hour
+        self.time_difference = int(clean[-1])
+        print(self.time_ref, half_hour, self.time_difference)
+
+        db.session.add(self)
+        db.session.commit()
 
 
 class Mapping(db.Model):

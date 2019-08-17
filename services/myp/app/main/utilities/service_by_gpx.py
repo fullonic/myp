@@ -7,6 +7,7 @@
 
 import os
 import secrets
+import operator
 from typing import NamedTuple, List
 from datetime import datetime, timedelta
 from functools import namedtuple
@@ -39,15 +40,16 @@ def to_datetime(datetime_: str) -> datetime:
     return dt.replace(tzinfo=PROJECT_CONFIG["TZ"])
 
 
-def create_track_data(points):
-    """Create track data points from track segments."""
-    pass
-
-
 def get_track_data(
-    folder: os.path = None, time_difference: int = 0
+    folder: os.path, half_hour: int, time_ref: str, time_difference: int
 ) -> List[NamedTuple]:
     """Parser to data from GPX file."""
+    # Check if UTC is negative or positive
+    if time_ref == "-":
+        _calc = operator.sub
+    else:
+        _calc = operator.add
+
     track = glob(f"{folder}/*.gpx")
     gpx_file = open(track[0])
     gpx = gpxpy.parse(gpx_file)
@@ -67,7 +69,10 @@ def get_track_data(
                         i,
                         point.latitude,
                         point.longitude,
-                        point.time + timedelta(hours=time_difference),
+                        _calc(
+                            point.time,
+                            timedelta(hours=time_difference, minutes=half_hour),
+                        ),
                     )
                 )
         else:
@@ -78,7 +83,10 @@ def get_track_data(
                             i,
                             point.latitude,
                             point.longitude,
-                            point.time + timedelta(hours=time_difference),
+                            _calc(
+                                point.time,
+                                timedelta(hours=time_difference, minutes=half_hour),
+                            ),
                         )
                     )
     PROJECT_CONFIG["TZ"] = track_data[0].time.tzinfo
@@ -117,12 +125,19 @@ def insert_tag_photos(folder: os.path = None, proj_id=None, map=False) -> None:
     start = perf_counter()
     gpx_project = TagGPX.query.filter_by(id=proj_id).first()
 
-    track = get_track_data(folder, time_difference=gpx_project.time_difference)
+    track = get_track_data(
+        folder,
+        time_difference=gpx_project.time_difference,
+        time_ref=gpx_project.time_ref,
+        half_hour=gpx_project.half_hour,
+    )
     photos = get_photo_data(folder)
     data = []
+    # TODO: MUST BE RETURNED TO USER TO NOTIFY ABOUT MISSING TAGGED PHOTOS
+    missing_photos = photos
 
     # Loop throw all photo collection one by one
-    for photo in photos:
+    for photo_index, photo in enumerate(photos):
         # For each photo check if photo timestamp is less than the interval of
         # gpx points. If it is, create a new object joining both data information.
         for i, point in enumerate(track):
@@ -130,8 +145,9 @@ def insert_tag_photos(folder: os.path = None, proj_id=None, map=False) -> None:
             if (diff > 0) and (diff < PROJECT_CONFIG["INTERVAL"]):
                 data.append(PhotoTag(photo.name, photo.time, point.lat, point.lng))
                 del track[: i - 1]
+                del missing_photos[photo_index]
 
-    # Load each photo and insert gps tag
+    # Load each photo and insert GPS tag
     for obj in data:
         file_ = f"{folder}/{obj.name}"
         img = piexif.load(file_)
@@ -144,6 +160,9 @@ def insert_tag_photos(folder: os.path = None, proj_id=None, map=False) -> None:
         # write new exif information to photo
         _bytes = piexif.dump(img)
         piexif.insert(_bytes, file_)
+
+    # LOG PHOTOS THAT WAS NOT POSSIBLE TO INSERT THE GPS INFORMATION
+    print("missing_photos", [m.name for m in missing_photos])
 
     # Insert project information inside mapping service table
     project_name = gpx_project.project_name
