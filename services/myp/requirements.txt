@@ -6,6 +6,7 @@ Flask-SQLAlchemy
 flask-login
 flask-wtf
 flask_debugtoolbar
+Flask-Caching
 flask_migrate
 flask_bcrypt
 psycopg2-binary

@@ -6,6 +6,7 @@ from flask import Flask
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_caching import Cache
 
 # from app.config import DevConfig
 
@@ -14,7 +15,7 @@ from flask_migrate import Migrate
 toolbar = DebugToolbarExtension()
 db = SQLAlchemy()
 migrate = Migrate()
-
+cache = Cache()
 
 def create_app(config=None):
     """Flask app."""
@@ -26,6 +27,7 @@ def create_app(config=None):
 
     # Set up dependencies
     toolbar.init_app(app)
+    cache.init_app(app)
     db.init_app(app)
     migrate.init_app(app, db)
 

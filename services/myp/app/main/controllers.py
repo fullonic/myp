@@ -20,13 +20,14 @@ from flask import (
     current_app,
     send_from_directory,
     url_for,
+    get_flashed_messages,
 )
 
 from flask_login import current_user, login_required
 from werkzeug.utils import secure_filename
 
 
-from app import db
+from app import db, cache
 from .forms import ProjectForm, MapByGPXForm
 from .models import TagGPX, Mapping, Download
 from ..auth.models import User
@@ -48,6 +49,18 @@ main_blueprint = Blueprint(
     url_prefix="/",
 )
 
+
+##########################
+# HELPER FUNCTIONS
+##########################
+def make_cache_keys(*args, **kwargs):
+    """Cache key: only cache functions/views based on key_prefix."""
+    path = request.path
+    args = str(object=hash(frozenset(request.args.items())))
+    messages = str(object=hash(frozenset(get_flashed_messages())))
+    return (path + args + messages).encode("utf-8")
+
+
 ##########################
 # APP PAGES
 ##########################
@@ -55,6 +68,7 @@ main_blueprint = Blueprint(
 
 @main_blueprint.route("/", methods=["POST", "GET"])
 @main_blueprint.route("/index", methods=["POST", "GET"])
+@cache.cached(timeout=72, key_prefix="home")
 def index():
     """Landing page."""
     return render_template("home.html")
@@ -238,6 +252,7 @@ def show_map():
 
 
 @main_blueprint.route("/tiles/<tiles>/", methods=["GET"])
+@cache.cached(timeout=72, key_prefix=make_cache_keys)
 def tiles(tiles):
     """Render map tiles examples based in user form input."""
     return render_template(f"/tiles/{tiles}.html")
@@ -245,7 +260,9 @@ def tiles(tiles):
 
 #  FUTURE REST API ROUTES
 @main_blueprint.route("/get_tiles/<tiles>/", methods=["POST"])
+# @cache.cached(timeout=72, key_prefix=make_cache_keys)
 def get_tiles(tiles):
+    """Get user tiles key from form and redirect to tiles route."""
     options = {
         "OpenStreetMap": "osm",
         "CartoDB positron": "positron",
@@ -254,6 +271,7 @@ def get_tiles(tiles):
         "Stamen Toner": "stamen_toner",
         "Stamen Watercolor": "stamen_watercolor",
     }
+    # return a url for selected tiles map provider
     return {"url": url_for("main.tiles", tiles=options[tiles])}
 
 

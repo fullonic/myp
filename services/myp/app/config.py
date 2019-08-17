@@ -30,6 +30,7 @@ class Config:
 class DevConfig(Config):
     """Development app configuration."""
 
+    CACHE_TYPE = "simple"
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
     DEBUG = True
     DEBUG_TB_ENABLED = True
@@ -44,6 +45,7 @@ class ProdConfig(Config):
 
 class TestConfig(Config):
     """Development app configuration."""
+    CACHE_TYPE = "null"
 
     # Disable CSRF tokens in the Forms (only for testing purposes!)
     WTF_CSRF_ENABLED = False

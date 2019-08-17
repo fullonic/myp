@@ -226,9 +226,9 @@ function setStyling() {
     url: "/setup_map_style/" + tiles + "&" + color + "/",
     processData: false,
     contentType: false,
-    success: function(msg) {
-      console.log(msg);
-    }
+    // success: function(msg) {
+  //   console.log(msg);
+  // }
   });
 };
 
@@ -241,6 +241,7 @@ function switchTiles() {
     processData: false,
     contentType: false,
     success: function(msg) {
+      // Set iframe url src based on api response
       frame.src = msg.url;
     }
   });
