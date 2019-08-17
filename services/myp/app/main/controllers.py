@@ -111,6 +111,7 @@ def mapping():
 def map_by_track():
     """Insert tags using gpx file service."""
     form = MapByGPXForm()
+    styling_form = ProjectForm()
     if request.method == "POST":
         if form.validate_on_submit():
             # Insert new project data into DB table
@@ -145,6 +146,8 @@ def map_by_track():
                 map = Mapping()
                 map.project_name = project.project_name
                 map.user_id = project.user_id
+                map.tiles = session["tiles"]
+                map.color = session["color"]
                 project.map = True  # Flag to decide how to build download url
                 map.create_folders(project.project_name)
                 db.session.add(project)
@@ -153,8 +156,10 @@ def map_by_track():
 
             # Insert gpx information into photos
             insert_tag_photos(folder, proj_id=project.id, map=project.map)
-            return redirect(url_for("main.map_by_track", token="FUNNY"))
-    return render_template("services/map_by_track.html", form=form, token="NONE")
+            return redirect(url_for("main.map_by_track", token=""))
+    return render_template(
+        "services/map_by_track.html", styling_form=styling_form, form=form, token="NONE"
+    )
 
 
 @main_blueprint.route("/create_map", methods=["POST", "GET"])
@@ -230,6 +235,15 @@ def map():
 def show_map():
     """Show map to test configurations."""
     return render_template("show_map.html")
+
+
+#  FUTURE REST API ROUTES
+@main_blueprint.route("/setup_map_style/<tiles>&<color>/", methods=["POST"])
+def setup_map_style(tiles, color):
+    session["tiles"] = tiles
+    session["color"] = color
+    print(tiles, color)
+    return dict(stats="success", msg="OK")
 
 
 @main_blueprint.route("/get_file/<token>/", methods=["GET", "POST"])

@@ -45,7 +45,7 @@
             <label class="form-check-label" for="map-or-not">
               Would you like map your photos?
             </label>
-            {{ form.mapping(class_="form-check-input col-2") }}
+            {{ form.mapping(class_="form-check-input col-2", **{"onclick":"selectMapStyle()"}) }}
           </div>
           <!-- PROGRESS BAR -->
           <div id="progress" class="progress d-none" style="width: 100%;">
@@ -62,4 +62,36 @@
   </div>
 </div>
 <!-- END FORM -->
+
+
+<!-- MODAL TO SELECT MAP STYLE -->
+<div class="modal fade" id="styleMap" tabindex="-1" role="dialog" aria-labelledby="styleMapLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Select your map style</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row mt-2 display-map">
+          <iframe src="{{ url_for('main.show_map') }}" class="shadow border border-warning rounded" width="100%" height="250px"></iframe> </div>
+        <div class="row mt-2">
+          <small class="text-muted d-inline">Select your markers color:</small>
+          {{ styling_form.color(class_="form-control") }}
+        </div>
+        <div class="row mt-2 d-block">
+          <small class="text-muted d-inline">Select your map tiles:</small>
+          {{ styling_form.tiles(class_="form-control") }}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <a id="set_map_style" onclick="setStyling()" href="#" type="button" class="btn btn-primary" data-dismiss="modal">Save</a>
+        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

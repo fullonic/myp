@@ -107,7 +107,7 @@ def generate_map(
         photo = _file["features"][i]["properties"]["photo_location"]
 
         # Create Icon
-        photo_location = f"<a href='{photo}' target='_blank'><img src='{photo}' height='50' width='50'></a>"  # noqa
+        photo_location = f"<a href='{photo}' target='_blank'><img src='{photo}' height='250' width='250'></a>"  # noqa
         popup = folium.Popup(html=photo_location)
         # folium.()
         folium.CircleMarker(

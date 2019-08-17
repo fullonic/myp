@@ -204,3 +204,31 @@ $(document).ready(function() {
   });
 
 });
+
+//  SETUP MAP STYLING FROM TAG GPX SERVICE
+
+//  OPEN MODEL
+function selectMapStyle() {
+  var checkBox = document.getElementById("map-or-not");
+  if (checkBox.checked == true) {
+    $('#styleMap').modal('toggle');
+  }
+};
+
+function setStyling() {
+  // var project_name = document.getElementById("project_name").value;
+  var tiles = document.getElementById("tiles").value;
+  var color = document.getElementById("color").value;
+  // console.log(project_name);
+
+  $.ajax({
+    type: 'POST',
+    url: "/setup_map_style/" + tiles + "&" + color + "/",
+    // data: tile,
+    processData: false,
+    contentType: false,
+    success: function(msg) {
+      console.log(msg);
+    }
+  });
+}
