@@ -131,6 +131,7 @@ def generate_map(
         f"{map_project.user.folder_mapping}/{project_name}/delivery/{project_name}.zip"
     )
     db.session.add(map_project)
+    db.session.commit()
 
     # NEEDS TO BE REFRACTED
     download = Download()
@@ -140,6 +141,7 @@ def generate_map(
     download.token = secrets.token_hex(16)
     download.user_id = map_project.user_id
     download.project_name = map_project.project_name
+    # Ensure unique and commit changes into db
     download.ensure_unique_token()
 
     if service_type == "mapping":

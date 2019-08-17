@@ -23,7 +23,6 @@ class TagGPX(db.Model):
     user_id = db.Column(db.Integer(), db.ForeignKey("users.id"))
     send_by_email = db.Column(db.Boolean(), default=False)
     map = db.Column(db.Boolean(), default=False)
-    finished = db.Column(db.Boolean(), default=False, nullable=False)
 
     @property
     def create_folder(self):
@@ -46,7 +45,6 @@ class Mapping(db.Model):
     hash_url = db.Column(db.String(256))
     send_by_email = db.Column(db.Boolean(), default=False)
     user_id = db.Column(db.Integer(), db.ForeignKey("users.id"))
-    finished = db.Column(db.Boolean(), default=False, nullable=False)
 
     def create_folders(self, project_name):
         """Create folders for mapping service using project name as root."""
@@ -76,6 +74,7 @@ class Download(db.Model):
     project_name = db.Column(db.String(64))
     file_path = db.Column(db.String(128))
     token = db.Column(db.String(128), unique=True)
+    is_ready = db.Column(db.Boolean(), default=False)
 
     def ensure_unique_token(self):
         """Force unique token into download table."""
@@ -88,3 +87,13 @@ class Download(db.Model):
                 print("DB ERROR\n", e)  # Must be logged into log file
                 db.session.rollback()
                 self.token = secrets.token_hex(16)
+
+    def ready(self):
+        """Make project available for download after celery job finished.
+
+        User must be notify by profile private message or email.
+        """
+        print(f"Setting <{self.id}:{self.project_name}> project ready to download")
+        self.is_ready = True
+        db.session.add(self)
+        db.session.commit()

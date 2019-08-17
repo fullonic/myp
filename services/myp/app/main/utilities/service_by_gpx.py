@@ -108,7 +108,7 @@ def get_photo_data(photos_folder: os.path = None) -> List[NamedTuple]:
 # CORE FUNCTIONS
 ##########################
 
-
+# TODO: MAKE IT AS CELERY JOB
 def insert_tag_photos(folder: os.path = None, proj_id=None, map=False) -> None:
     """Service API to add GPS Data to Photos using gpx file."""
     from .utils import to_gms, zipper
@@ -131,6 +131,7 @@ def insert_tag_photos(folder: os.path = None, proj_id=None, map=False) -> None:
                 data.append(PhotoTag(photo.name, photo.time, point.lat, point.lng))
                 del track[: i - 1]
 
+    # Load each photo and insert gps tag
     for obj in data:
         file_ = f"{folder}/{obj.name}"
         img = piexif.load(file_)
