@@ -7,26 +7,32 @@
 
 
 <!-- FORM -->
+
+
 <div class="col-md-5 mb-2 ">
   <div class="card mr-auto ml-auto">
     <div class="card-body">
       <form id="form-track" , method="post" action="{{url_for('main.map_by_track')}}" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <div class="form-group">
-          <div class="row mt-2">
+          <div class="col-2">
+            <a class="text-right" title="Give me a tour!" href="javascript:void(0);" onclick="javascript:introJs().start();"><i class="text-right fa-3x far fa-question-circle"></i></a>
+          </div>
+          <div data-step="1" data-intro="Select a name for your project; ex: trip to Catalonia" class="row mt-2">
             <small class="text-muted d-inline">Choose a project name:</small>
             {{ form.project_name(class_="form-control files", placeholder="Project Name") }}
           </div>
-          <div class="row mt-2">
+          <div data-step="2" data-intro="Upload your journey photos (up to 500mb)" class="row mt-2">
             {{ form.photos(class_="input", accept=".png, .jpg, .jpeg, .gif, .tiff") }}
           </div>
-          <div class="row mt-2">
+          <div data-step="3" data-intro="Add your journey file track (currently only .gpx files are accepted)" class="row mt-2">
             {{ form.track(class_="input", accept=".gpx" ) }}
           </div>
-          <div class="row mt-2">
+          <div data-step="4" data-intro="Are your photos timestamp and your gpx track time matching? If not, insert here the time difference using your photo time as reference. For example: if your photos time are 1 hour ahead, choose +01:00" class="row mt-2">
             {{ form.time_difference(class_="input") }}
+
           </div>
-          <div class="row mt-2 form-check">
+          <div class="row mt-2 form-check" data-step="5" data-intro="By default, all your uploaded will be geo tagged using your gpx track as reference. If you would like to have also your photos mapped, just select this checkbox">
             <label class="form-check-label" for="defaultCheck1">
               Would you like map your photos?
             </label>

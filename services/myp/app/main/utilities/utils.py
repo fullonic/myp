@@ -270,6 +270,4 @@ def zipper(mapping_project_id=None, gpx_project_id=None, service_type=None):
         "gpx_mapping": service_gpx_mapping,
         "mapping": service_mapping,
     }
-
-    print("SET UP", mapping_project_id, gpx_project_id, service_type)
     service[service_type](origin, gpx_project_id, mapping_project_id)

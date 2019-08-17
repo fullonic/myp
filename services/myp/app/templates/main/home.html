@@ -18,7 +18,7 @@
 </body>
 
 
-<!-- Modal -->
+<!-- SERVICES MODAL -->
 <div class="modal fade" id="servicesModal" tabindex="-1" role="dialog" aria-labelledby="servicesModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content text-center">
@@ -39,11 +39,15 @@
           <div class="col-6">
             <div class="card">
               <div class="card-body serviceBtn">
-                <a href="{{ url_for('main.create_map')}}">
-                  <i class="fas fa-map-marked-alt landing-service">
-                    <p class="smaller underlineHover">Geo tagged photos</p>
-                  </i>
-                </a>
+                {% if current_user.is_authenticated %}
+                <a href="{{ url_for('main.mapping')}}">
+                  {% else %}
+                  <a href="{{ url_for('main.create_map')}}">
+                    {% endif %}
+                    <i class="fas fa-map-marked-alt landing-service">
+                      <p class="smaller underlineHover">Geo tagged photos</p>
+                    </i>
+                  </a>
               </div>
             </div>
           </div>

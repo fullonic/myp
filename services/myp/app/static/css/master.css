@@ -184,3 +184,8 @@ body,
   text-align: center !important;
   animation: 0 !important;
 }
+
+/* TOUR GUIDE HELPER */
+.introjs-helperNumberLayer {
+  background: #ff8008 !important;
+}

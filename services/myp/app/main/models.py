@@ -88,9 +88,3 @@ class Download(db.Model):
                 print("DB ERROR\n", e)  # Must be logged into log file
                 db.session.rollback()
                 self.token = secrets.token_hex(16)
-# download = Download()
-# download.file_path = '("{gpx_project.user.folder_gpx}/{project_name}/{project_name}.zip")'
-# download.token = "TOKEN"
-# download.user_id = 10
-# download.project_name = "gpx_project.project_name"
-# download.ensure_unique_token()
