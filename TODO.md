@@ -1,0 +1,11 @@
+- [ ] Add "ready" boolean flag to download table
+- [ ] Create multiple choose to time difference with small explanation
+- [ ] Add map tiles changing when select a different tile provider
+- [ ] Add map style selection on map by gpx
+- [ ] Update all pytest route services tests
+- [ ] Clean unused print, comments and uncomment stuff
+- [ ] Implement log system
+- [ ] Add celery background jobs
+- [ ] Remove unused table fields from db tables
+- [ ] Create a function to delete old project
+- [ ] Add celery beat to clean old projects

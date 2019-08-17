@@ -33,12 +33,8 @@ def to_json(
 
 def to_geojson(collections: list, _file: os.path) -> os.path:
     """Create a geojson file with all photography data."""
-    # _file = os.path.join(
-    #     current_app.config["GEOJSON_FOLDER"], f"{project_folder}.geojson"
-    # )
     with open(_file, "w") as f:
         json.dump({"type": "FeatureCollection", "features": collections}, f)
-    # return _file
 
 
 def map_photos(gallery_folder: os.path, project_id: int, service_type: str = "mapping"):
@@ -69,7 +65,6 @@ def map_photos(gallery_folder: os.path, project_id: int, service_type: str = "ma
             date = str(dt.date())
             time_ = str(dt.time())
             data.append(to_json(project_name, lat, lng, name, date, time_))
-            print("DATA", data)
         except:  # noqa MUST BE REVISED
             print(f"Photo{name} doesn't contains GPS DATA")  # NOTE: Needs to be logged
     geojson_file = (
@@ -146,15 +141,6 @@ def generate_map(
     download.user_id = map_project.user_id
     download.project_name = map_project.project_name
     download.ensure_unique_token()
-#
-# try:
-#     db.session.add(download)
-#     db.session.commit()
-# except Exception as e:
-#     db.session.rollback()
-#     download.token = secrets.token_hex(16)
-#     db.session.add(download)
-#     db.session.commit()
 
     if service_type == "mapping":
         return zipper(mapping_project_id=map_project.id, service_type="mapping")

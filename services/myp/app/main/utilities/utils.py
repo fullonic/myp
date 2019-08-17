@@ -246,11 +246,13 @@ def zipper(mapping_project_id=None, gpx_project_id=None, service_type=None):
         gallery_folder = f"{base}/photos_{project.project_name}"
         os.mkdir(gallery_folder)
         if not type_:
+            # Simple mapping project
             source = f"{project.user.folder_mapping}/{project.project_name}/delivery"
             zip_file = f"{source}/{project.project_name}"
             shutil.make_archive(zip_file, "zip", source)
 
         else:
+            # Deals with gpx project that is intend to be mapped
             source = os.listdir(f"{project.user.folder_gpx}/{project.project_name}/")
             destination = f"{base}/photos_{project.project_name}"
             for file in source:
@@ -263,7 +265,7 @@ def zipper(mapping_project_id=None, gpx_project_id=None, service_type=None):
         # CREATE ZIP FOLDER WITH TAGGED PHOTOS
         service_gpx(origin, gpx_project_id, None)
         # ZIP MAP AND PHOTO GALLERY FOLDER
-        service_mapping(origin, None, mapping_project_id, type_="mixed")
+        service_mapping(origin, None, mapping_project_id, type_="gpx_mapping")
 
     service = {
         "gpx": service_gpx,
