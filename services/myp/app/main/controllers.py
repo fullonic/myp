@@ -237,9 +237,29 @@ def show_map():
     return render_template("show_map.html")
 
 
+@main_blueprint.route("/tiles/<tiles>/", methods=["GET"])
+def tiles(tiles):
+    """Render map tiles examples based in user form input."""
+    return render_template(f"/tiles/{tiles}.html")
+
+
 #  FUTURE REST API ROUTES
+@main_blueprint.route("/get_tiles/<tiles>/", methods=["POST"])
+def get_tiles(tiles):
+    options = {
+        "OpenStreetMap": "osm",
+        "CartoDB positron": "positron",
+        "CartoDB dark_matter": "dark_matter",
+        "Stamen Terrain": "stamen_terrain",
+        "Stamen Toner": "stamen_toner",
+        "Stamen Watercolor": "stamen_watercolor",
+    }
+    return {"url": url_for("main.tiles", tiles=options[tiles])}
+
+
 @main_blueprint.route("/setup_map_style/<tiles>&<color>/", methods=["POST"])
 def setup_map_style(tiles, color):
+    """Get user styling and add to session."""
     session["tiles"] = tiles
     session["color"] = color
     print(tiles, color)

@@ -75,15 +75,16 @@
         </button>
       </div>
       <div class="modal-body">
-        <div class="row mt-2 display-map">
-          <iframe src="{{ url_for('main.show_map') }}" class="shadow border border-warning rounded" width="100%" height="250px"></iframe> </div>
+        <div class="row mt-2" id="display-map">
+          <iframe id="frame" src="{{ url_for('main.show_map') }}" class="shadow border border-warning rounded" width="100%" height="250px"></iframe>
+        </div>
         <div class="row mt-2">
           <small class="text-muted d-inline">Select your markers color:</small>
           {{ styling_form.color(class_="form-control") }}
         </div>
         <div class="row mt-2 d-block">
           <small class="text-muted d-inline">Select your map tiles:</small>
-          {{ styling_form.tiles(class_="form-control") }}
+          {{ styling_form.tiles(class_="form-control", **{"onchange":"switchTiles()"}) }}
         </div>
       </div>
       <div class="modal-footer">

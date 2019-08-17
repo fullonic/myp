@@ -224,11 +224,24 @@ function setStyling() {
   $.ajax({
     type: 'POST',
     url: "/setup_map_style/" + tiles + "&" + color + "/",
-    // data: tile,
     processData: false,
     contentType: false,
     success: function(msg) {
       console.log(msg);
     }
   });
-}
+};
+
+function switchTiles() {
+  var frame = document.getElementById("frame");
+  var tiles = document.getElementById("tiles").value;
+  $.ajax({
+    type: 'POST',
+    url: "/get_tiles/" + tiles + "/",
+    processData: false,
+    contentType: false,
+    success: function(msg) {
+      frame.src = msg.url;
+    }
+  });
+};

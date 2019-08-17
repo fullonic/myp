@@ -29,7 +29,7 @@
               </div>
               <div class="row mt-2 d-block">
                 <small class="text-muted d-inline">Select your map tiles:</small>
-                {{ form.tiles(class_="form-control") }}
+                {{ form.tiles(class_="form-control", **{"onchange":"switchTiles()"}) }}
               </div>
 
               <!-- PROGRESS BAR -->
@@ -50,7 +50,7 @@
     </div>
     <!-- MAP FRAME -->
     <div class="col-md-8 mb-2 ">
-      <iframe src="{{ url_for('main.show_map') }}" class="shadow border border-warning rounded" width="100%" height="100%"></iframe>
+      <iframe id="frame" src="{{ url_for('main.show_map') }}" class="shadow border border-warning rounded" width="100%" height="100%"></iframe>
       <!-- <div class="col-md-8 mb-2 shadow border border-warning rounded" width="100%" height="100%">
       {% include "show_map.html" %}
     </div> -->

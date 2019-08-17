@@ -1,9 +1,9 @@
 -   [x] Add "ready" bool flag to download table
 -   [x] Create multiple choose to time difference with small explanation
+-   [x] Improve map popup photo
+-   [x] Add map tiles changing when select a different tile provider
+-   [x] Add map style selection on map by gpx
 -   [ ] Give user feedback about process, and what photos where not tagged (TagGPX)
--   [ ] Improve map popup photo
--   [ ] Add map tiles changing when select a different tile provider
--   [ ] Add map style selection on map by gpx
 -   [ ] Update all pytest route services tests
 -   [ ] Clean unused print, comments and uncomment stuff
 -   [ ] Implement log system
