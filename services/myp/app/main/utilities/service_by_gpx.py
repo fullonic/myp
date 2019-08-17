@@ -8,6 +8,7 @@
 import os
 import secrets
 import operator
+import math
 from typing import NamedTuple, List
 from datetime import datetime, timedelta
 from functools import namedtuple
@@ -23,9 +24,9 @@ from app.main.models import TagGPX, Download
 from .service_mapping import map_photos
 
 # Set up objects
-GPSPoint = namedtuple("GPSPoint", ["id", "lat", "lng", "time"])
+GPSPoint = namedtuple("GPSPoint", ["id", "lat", "lng", "time", "alt"])
 Photo = namedtuple("Photo", ["name", "time"])
-PhotoTag = namedtuple("PhotoTag", ["name", "time", "lat", "lng"])
+PhotoTag = namedtuple("PhotoTag", ["name", "time", "lat", "lng", "alt"])
 PROJECT_CONFIG = {}
 
 
@@ -73,11 +74,13 @@ def get_track_data(
                             point.time,
                             timedelta(hours=time_difference, minutes=half_hour),
                         ),
+                        point.elevation,
                     )
                 )
         else:
             for segment in track.segments:
                 for i, point in enumerate(segment.points):
+                    point.elevation
                     track_data.append(
                         GPSPoint(
                             i,
@@ -87,6 +90,7 @@ def get_track_data(
                                 point.time,
                                 timedelta(hours=time_difference, minutes=half_hour),
                             ),
+                            point.altitude,
                         )
                     )
     PROJECT_CONFIG["TZ"] = track_data[0].time.tzinfo
@@ -143,8 +147,10 @@ def insert_tag_photos(folder: os.path = None, proj_id=None, map=False) -> None:
         for i, point in enumerate(track):
             diff = (point.time - photo.time).seconds
             if (diff > 0) and (diff < PROJECT_CONFIG["INTERVAL"]):
-                data.append(PhotoTag(photo.name, photo.time, point.lat, point.lng))
-                del track[: i - 1]
+                data.append(
+                    PhotoTag(photo.name, photo.time, point.lat, point.lng, point.alt)
+                )
+                del track[: i - 3]
                 del missing_photos[photo_index]
 
     # Load each photo and insert GPS tag
@@ -157,6 +163,8 @@ def insert_tag_photos(folder: os.path = None, proj_id=None, map=False) -> None:
         # set coord ref based on original coord point
         img["GPS"][piexif.GPSIFD.GPSLongitudeRef] = b"E" if obj.lng > 0 else b"W"
         img["GPS"][piexif.GPSIFD.GPSLatitudeRef] = b"N" if obj.lng > 0 else b"S"
+        # Set altitude
+        img["GPS"][piexif.GPSIFD.GPSAltitude] = (math.floor(obj.alt * 1000), 1000)
         # write new exif information to photo
         _bytes = piexif.dump(img)
         piexif.insert(_bytes, file_)

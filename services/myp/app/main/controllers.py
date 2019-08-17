@@ -252,7 +252,7 @@ def show_map():
 
 
 @main_blueprint.route("/tiles/<tiles>/", methods=["GET"])
-@cache.cached(timeout=72, key_prefix=make_cache_keys)
+@cache.cached(timeout=7200, key_prefix=make_cache_keys)
 def tiles(tiles):
     """Render map tiles examples based in user form input."""
     return render_template(f"/tiles/{tiles}.html")
@@ -260,7 +260,7 @@ def tiles(tiles):
 
 #  FUTURE REST API ROUTES
 @main_blueprint.route("/get_tiles/<tiles>/", methods=["POST"])
-# @cache.cached(timeout=72, key_prefix=make_cache_keys)
+@cache.cached(timeout=7200, key_prefix=make_cache_keys)
 def get_tiles(tiles):
     """Get user tiles key from form and redirect to tiles route."""
     options = {
