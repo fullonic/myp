@@ -31,6 +31,12 @@
                 <small class="text-muted d-inline">Select your map tiles:</small>
                 {{ form.tiles(class_="form-control", **{"onchange":"switchTiles()"}) }}
               </div>
+              <div class="text-center mt-2">
+                <label class="form-check-label" for="bg_job" class="">
+                  Let me know when is ready
+                </label>
+                {{ form.bg_job(class_="form-check-input ml-2") }}
+              </div>
 
               <!-- PROGRESS BAR -->
               <div id="progress" class="progress d-none" style="width: 100%;">
@@ -45,38 +51,16 @@
         </div>
       </div>
     </div>
+    <!-- END FORM -->
     <div class="col-md-1">
 
     </div>
     <!-- MAP FRAME -->
     <div class="col-md-8 mb-2 ">
       <iframe id="frame" src="{{ url_for('main.show_map') }}" class="shadow border border-warning rounded" width="100%" height="100%"></iframe>
-      <!-- <div class="col-md-8 mb-2 shadow border border-warning rounded" width="100%" height="100%">
-      {% include "show_map.html" %}
-    </div> -->
     </div>
   </div>
+  </div>
 </section>
-
-<script type="text/javascript">
-  function checkSize() {
-    if (typeof FileReader !== "undefined") {
-      var fi = document.getElementById('upload');
-      var size = 0;
-
-      for (var i = 0; i <= fi.files.length - 1; i++) {
-
-        var fname = fi.files.item(i).name; // THE NAME OF THE FILE.
-        var fsize = fi.files.item(i).size; // THE SIZE OF THE FILE.
-        size = size + fsize
-      }
-      console.log(size / 1024 / 1024);
-      // check file size
-    };
-    document.getElementById("feedback").innerHTML = "Files uploaded:" + fi.files.length + " || Total size: " + Math.round(size / 1024 / 1024) + " MB";
-    size = 0;
-  }
-  // $('#map_preview').load('show_map');
-</script>
 
 {% endblock %}

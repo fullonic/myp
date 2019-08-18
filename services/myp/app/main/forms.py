@@ -44,6 +44,7 @@ class ProjectForm(Form):
             ("Stamen Watercolor", "Stamen Watercolor"),
         ],
     )
+    bg_job = BooleanField(label="Let me know when is ready", id="bg_job")
 
 
 class MapByGPXForm(Form):
