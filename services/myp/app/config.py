@@ -37,6 +37,11 @@ class DevConfig(Config):
     SQLALCHEMY_RECORD_QUERIES = True
     MYP_SLOW_DB_QUERY_TIME = 0.5
 
+    # CELERY CONFIG
+    CELERY_IMPORTS = ("app.main.main_tasks",)
+    CELERY_BROKER_URL = "amqp://rabbitmq:rabbitmq@localhost//"
+    CELERY_RESULT_BACKEND = "amqp://rabbitmq:rabitmq@localhost//"
+
 class ProdConfig(Config):
     """Development app configuration."""
 
