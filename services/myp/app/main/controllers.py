@@ -68,7 +68,7 @@ def make_cache_keys(*args, **kwargs):
 
 @main_blueprint.route("/", methods=["POST", "GET"])
 @main_blueprint.route("/index", methods=["POST", "GET"])
-@cache.cached(timeout=72, key_prefix="home")
+# @cache.cached(timeout=72, key_prefix="home")
 def index():
     """Landing page."""
     return render_template("home.html")
