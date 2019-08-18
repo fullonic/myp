@@ -34,6 +34,8 @@ class DevConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
     DEBUG = True
     DEBUG_TB_ENABLED = True
+    SQLALCHEMY_RECORD_QUERIES = True
+    MYP_SLOW_DB_QUERY_TIME = 0.5
 
 class ProdConfig(Config):
     """Development app configuration."""

@@ -25,7 +25,7 @@ from flask import (
 
 from flask_login import current_user, login_required
 from werkzeug.utils import secure_filename
-
+from flask_sqlalchemy import get_debug_queries
 
 from app import db, cache
 from .forms import ProjectForm, MapByGPXForm
@@ -53,6 +53,17 @@ main_blueprint = Blueprint(
 ##########################
 # HELPER FUNCTIONS
 ##########################
+@main_blueprint.after_request
+def after_request(response):
+    for query in get_debug_queries():
+        if query.duration >= current_app.config["MYP_SLOW_DB_QUERY_TIME"]:
+            print(
+                f"SLOWER {query.statement, query.parameters, query.duration, query.context}"
+            )
+            
+    return response
+
+
 def make_cache_keys(*args, **kwargs):
     """Cache key: only cache functions/views based on key_prefix."""
     path = request.path
