@@ -251,6 +251,9 @@ def get_gps_exif(file_path: os.path, name: str):
     try:
         lat = to_degrees(img["GPS"][piexif.GPSIFD.GPSLatitude])
         lng = to_degrees(img["GPS"][piexif.GPSIFD.GPSLongitude])
+        alt = img["GPS"][piexif.GPSIFD.GPSAltitude]
+        print(alt)
+
         dt = to_datetime(img["0th"][piexif.ImageIFD.DateTime].decode())
         date = str(dt.date())
         time_ = str(dt.time())

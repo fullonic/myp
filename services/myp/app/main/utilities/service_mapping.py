@@ -3,6 +3,8 @@
 import os
 import json
 import secrets
+import operator
+from math import floor
 from typing import Any
 from glob import glob
 
@@ -15,9 +17,14 @@ from app.main.models import TagGPX, Mapping, Download
 from .utils import to_degrees, to_datetime, zipper
 
 
-
 def to_json(
-    project_name: str, lat: float, lng: float, name: str, date: str, time_: str
+    project_name: str,
+    lat: float,
+    lng: float,
+    name: str,
+    alt: float,
+    date: str,
+    time_: str,
 ):
     """Turn data into json format."""
     return {
@@ -25,6 +32,7 @@ def to_json(
         "type": "Feature",
         "properties": {
             "photo_location": os.path.join(f"photos_{project_name}", name),
+            "alt": alt,
             "date": date,
             "time_": time_,
         },
@@ -56,6 +64,7 @@ def map_photos(gallery_folder: os.path, project_id: int, service_type: str = "ma
     for photo in photos:
         img = piexif.load(photo)
         name = os.path.basename(photo)
+
         try:
             print("GETTING DATA FROM PHOTOS")
             # Extract and convert exif data
@@ -64,7 +73,10 @@ def map_photos(gallery_folder: os.path, project_id: int, service_type: str = "ma
             dt = to_datetime(img["0th"][piexif.ImageIFD.DateTime].decode())
             date = str(dt.date())
             time_ = str(dt.time())
-            data.append(to_json(project_name, lat, lng, name, date, time_))
+            # get altitude, Meters,Decimal
+            m, d = img["GPS"][piexif.GPSIFD.GPSAltitude]
+            alt = operator.truediv(m, d)
+            data.append(to_json(project_name, lat, lng, name, floor(alt), date, time_))
         except:  # noqa MUST BE REVISED
             print(f"Photo{name} doesn't contains GPS DATA")  # NOTE: Needs to be logged
     geojson_file = (
@@ -108,6 +120,9 @@ def generate_map(
 
         # Create Icon
         photo_location = f"<a href='{photo}' target='_blank'><img src='{photo}' height='250' width='250'></a>"  # noqa
+        photo_location += f"""<p style="text-align:center;">
+        alt. {_file["features"][i]["properties"]["alt"]} mts |
+        {_file["features"][i]["properties"]["date"]}</p>"""
         popup = folium.Popup(html=photo_location)
         # folium.()
         folium.CircleMarker(

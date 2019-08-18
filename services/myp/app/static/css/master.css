@@ -189,3 +189,7 @@ body,
 .introjs-helperNumberLayer {
   background: #ff8008 !important;
 }
+
+.leaflet-popup-content-wrapper {
+  text-align: center !important;
+}
