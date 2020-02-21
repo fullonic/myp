@@ -5,6 +5,7 @@ import os
 from werkzeug.utils import secure_filename
 
 from .. import celery
+
 from .utilities.utils import allowed_photo_file
 from .utilities.service_mapping import map_photos
 

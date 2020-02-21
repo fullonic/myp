@@ -28,3 +28,8 @@
 
 -   [ ] Fix Drag and Drop in mapping services
 -   [ ] Create user profile page (Modal)
+
+
+NOTES:
+Raspberry pi was necessary install:
+sudo apt-get install libatlas-base-dev
