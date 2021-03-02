@@ -7,6 +7,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_caching import Cache
+from flask_celery import Celery
 
 # from app.config import DevConfig
 
@@ -16,6 +17,8 @@ toolbar = DebugToolbarExtension()
 db = SQLAlchemy()
 migrate = Migrate()
 cache = Cache()
+celery = Celery()
+
 
 def create_app(config=None):
     """Flask app."""
@@ -30,6 +33,7 @@ def create_app(config=None):
     cache.init_app(app)
     db.init_app(app)
     migrate.init_app(app, db)
+    celery.init_app(app)
 
     from .main import create_module as main_create_module
     from .auth import create_module as auth_create_module
@@ -43,13 +47,16 @@ def create_app(config=None):
 
     @app.shell_context_processor
     def ctx():
+        import app.main.main_tasks as tasks  # noqa
+
         return {
             "app": app,
             "db": db,
             "User": User,
             "TagGPX": TagGPX,
             "Mapping": Mapping,
-            "Download": Download
+            "Download": Download,
+            "tasks": tasks,
         }
 
     return app

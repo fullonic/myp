@@ -17,6 +17,7 @@ services:
     # Same name as the service name
     depends_on:
       - myp-db
+      - rmq
 
   # Builds DB from local costum db image
   myp-db:
@@ -37,3 +38,12 @@ services:
       - 80:80
     depends_on:
       - myp
+      - rmq
+
+  # set up for celery background jobs
+  rmq:
+    image:          rabbitmq:3-management
+    env_file:
+      - app-dev.env
+    ports:
+      - 15672:15672

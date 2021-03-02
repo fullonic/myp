@@ -8,6 +8,8 @@ done
 
 echo "PostgreSQL started"
 
-# RUNS FLASK SERVER
-# python manage.py run -h 0.0.0.0
+# Start Celery Workers
+echo "STARTING CELERY"
+celery worker -A celery_runner -l info &
+echo "STARTING APP"
 gunicorn -b 0.0.0.0:5000 manage:app
