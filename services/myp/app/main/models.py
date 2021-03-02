@@ -96,7 +96,7 @@ class Download(db.Model):
                 db.session.add(self)
                 db.session.commit()
                 break
-            except Exception as e:
+            except Exception as e:  # Find error related with contains violation: use django UUID4
                 print("DB ERROR\n", e)  # Must be logged into log file
                 db.session.rollback()
                 self.token = secrets.token_hex(16)

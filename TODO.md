@@ -11,6 +11,7 @@
 -   [x] Add map style selection on map by gpx
 -   [x] Start cache system: Cache map views
 -   [ ] Implement log system
+-   [ ] Remove folium and use leaflet directly.
 -   [ ] Give user feedback about process, and what photos where not tagged (TagGPX)
 -   [ ] Add cli command: run tests, migrate and upgrade db,
 -   [ ] Update all pytest route services tests
