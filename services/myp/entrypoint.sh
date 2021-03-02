@@ -10,6 +10,7 @@ echo "PostgreSQL started"
 
 # Start Celery Workers
 echo "STARTING CELERY"
+# /usr/bin/supervisord -c /home/myp/app/supervisor_worker.conf --nodaemon &
 celery worker -A celery_runner -l info &
 echo "STARTING APP"
 python manage.py run -h 0.0.0.0

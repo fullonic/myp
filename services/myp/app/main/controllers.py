@@ -40,6 +40,7 @@ from .utilities.utils import (
 )
 from .utilities.service_by_gpx import insert_tag_photos
 from .utilities.service_mapping import map_photos
+from ..main.main_tasks import map_it
 
 main_blueprint = Blueprint(
     "main",
@@ -60,7 +61,7 @@ def after_request(response):
             print(
                 f"SLOWER {query.statement, query.parameters, query.duration, query.context}"
             )
-            
+
     return response
 
 
@@ -97,12 +98,35 @@ def how_works():
 
 
 # MAPPING
+import asyncio  # noqa
+import time  # noqa
+
+
+async def save_files_async(folder, id_, photos):
+    """Save files to disk."""
+    for file in photos:
+        # if file and allowed_photo_file(file.filename):
+        # filename = secure_filename(file.filename)
+        file.save(os.path.join(folder, file.filename))
+        await asyncio.sleep(0.01)
+    map_it.delay(folder, id_, service_type="mapping")
+
+
+def save_files(folder, id_, photos):
+    """Save files to disk."""
+    for file in photos:
+        if file and allowed_photo_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(folder, filename))
+
+
 @main_blueprint.route("/mapping", methods=["POST", "GET"])
 @login_required
 def mapping():
     """MAP SERVICE."""
     form = ProjectForm()
     if request.method == "POST" and form.validate_on_submit():
+        start = time.perf_counter()
         project = Mapping()
         name = request.form["project_name"]
         project.project_name = name
@@ -118,17 +142,21 @@ def mapping():
         """MISSING SAVE THE PHOTOS TO FOLDER"""
         photos = request.files.getlist("files")
         folder = f"{current_user.folder_mapping}/{name}/requests"
-        for file in photos:
-            if file and allowed_photo_file(file.filename):
-                filename = secure_filename(file.filename)
-                file.save(os.path.join(folder, filename))
-
-        # ADD PROJECT TO DB
+        # ADD PROJECT TO DBync(folder, project.id, photos))
         db.session.add(project)
         db.session.commit()
-        map_photos(folder, project.id, service_type="mapping")
-    return render_template("services/mapping.html", form=form)
 
+        save_files(folder, project.id, photos)
+        if request.form.get("bg_job", None):
+            # asyncio.run(save_files_async(folder, project.id, photos))
+            map_it.delay(folder, project.id, service_type="mapping")
+        else:
+            map_it(folder, project.id, service_type="mapping")
+
+        end = time.perf_counter()
+        print(f"total time: {end-start}")
+        # map_photos(folder, project.id, ser5001vice_type="mapping")
+    return render_template("services/mapping.html", form=form)
 
 # MAP BY GPX FILE
 @main_blueprint.route("/map_by_track", methods=["POST", "GET"])

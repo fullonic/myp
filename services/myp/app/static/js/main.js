@@ -31,7 +31,6 @@ $(document).ready(function() {
               $("#mappingSubmit").text("Generating map files....");
               mappingSubmit.classList.add("btn-danger");
             };
-
           }
         });
         return xhr;
@@ -42,15 +41,24 @@ $(document).ready(function() {
       processData: false,
       contentType: false,
       success: function() {
+        console.log("SENDING FILES");
         nFiles();
+        console.log("SENT");
         $("#mappingSubmit").attr('disabled', true).text("Upload Complete!");
         mappingSubmit.classList.remove("btn-danger");
         mappingSubmit.classList.add("btn-success");
-        getFile();
-        alert('File uploaded!');
+
+
         // GET URL FOR DOWNLOAD FILE
-        var btn = document.getElementById('download_file');
-        btn.classList.remove("d-none");
+        var checkBox = document.getElementById("bg_job");
+        if (checkBox.checked == false) {
+          getFile();
+          alert('File uploaded!');
+          var btn = document.getElementById('download_file');
+          btn.classList.remove("d-none");
+        } else {
+          alert('File uploaded!');
+        }
       }
     });
 
@@ -118,6 +126,26 @@ $(document).ready(function() {
   });
 });
 
+// HELPER FUNCTIONS
+
+// Checks total uploaded files in MBs
+function checkSize() {
+  if (typeof FileReader !== "undefined") {
+    var fi = document.getElementById('upload');
+    var size = 0;
+
+    for (var i = 0; i <= fi.files.length - 1; i++) {
+
+      var fname = fi.files.item(i).name; // THE NAME OF THE FILE.
+      var fsize = fi.files.item(i).size; // THE SIZE OF THE FILE.
+      size = size + fsize
+    }
+    // console.log(size / 1024 / 1024);
+    // check file size
+  };
+  document.getElementById("feedback").innerHTML = "Files uploaded:" + fi.files.length + " || Total size: " + Math.round(size / 1024 / 1024) + " MB";
+  size = 0;
+}
 
 function nFiles() {
   var label = document.getElementsByTagName("label");
@@ -227,8 +255,8 @@ function setStyling() {
     processData: false,
     contentType: false,
     // success: function(msg) {
-  //   console.log(msg);
-  // }
+    //   console.log(msg);
+    // }
   });
 };
 
