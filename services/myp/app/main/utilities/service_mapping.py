@@ -101,14 +101,18 @@ def generate_map(
         _file = json.load(f)
 
     # create map zoom point
-    lng, lat = _file["features"][0]["geometry"]["coordinates"]
+
+    try:
+        lng, lat = _file["features"][0]["geometry"]["coordinates"]
+    except IndexError:
+        lng, lat = [3, 43]
 
     # Get info to generate map
     map_project = Mapping.query.filter_by(
         project_name=project_name, user_id=user_id
     ).first()
 
-    map = folium.Map(tiles=map_project.tiles, location=[lat, lng], zoom_start=6)
+    map_ = folium.Map(tiles=map_project.tiles, location=[lat, lng], zoom_start=6)
 
     mc = MarkerCluster()
 
@@ -135,9 +139,9 @@ def generate_map(
             class_name="circle",
         ).add_to(mc)
 
-    mc.add_to(map)
+    mc.add_to(map_)
 
-    map.save(
+    map_.save(
         f"{map_project.user.folder_mapping}/{project_name}/delivery/{project_name}.html"
     )
     # REMOVE GEOJSON FILE AFTER CREATE MAP
