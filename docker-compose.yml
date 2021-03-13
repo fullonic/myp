@@ -29,16 +29,16 @@ services:
       - 5435:5432
     env_file:
       - db-dev.env
-  nginx:
-    build:
-      context:    ./services/nginx
-      dockerfile: Dockerfile
-    restart:      always
-    ports:
-      - 80:80
-    depends_on:
-      - myp
-      - rmq
+  # nginx:
+  #   build:
+  #     context:    ./services/nginx
+  #     dockerfile: Dockerfile
+  #   restart:      always
+  #   ports:
+  #     - 80:80
+  #   depends_on:
+  #     - myp
+  #     - rmq
 
   # set up for celery background jobs
   rmq:

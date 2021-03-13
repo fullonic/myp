@@ -90,7 +90,7 @@ def get_track_data(
                                 point.time,
                                 timedelta(hours=time_difference, minutes=half_hour),
                             ),
-                            point.altitude,
+                            point.elevation,
                         )
                     )
     PROJECT_CONFIG["TZ"] = track_data[0].time.tzinfo
@@ -177,8 +177,8 @@ def insert_tag_photos(folder: os.path = None, proj_id=None, map=False) -> None:
     gpx_project.download_file = (
         f"{gpx_project.user.folder_gpx}/{project_name}/{project_name}.zip"
     )
-    hash = secrets.token_hex(16)
-    gpx_project.hash_url = hash
+    hash_ = secrets.token_hex(16)
+    gpx_project.hash_url = hash_
 
     db.session.add(gpx_project)
     db.session.commit()
@@ -193,7 +193,7 @@ def insert_tag_photos(folder: os.path = None, proj_id=None, map=False) -> None:
         download.file_path = (
             f"{gpx_project.user.folder_gpx}/{project_name}/{project_name}.zip"
         )
-        download.token = hash
+        download.token = hash_
         download.user_id = gpx_project.user_id
         download.project_name = gpx_project.project_name
 

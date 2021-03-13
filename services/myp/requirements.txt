@@ -14,8 +14,8 @@ Flask-Testing
 gunicorn
 pytest
 coverage
-flake8===3.7.7
+flake8==3.7.7
 black
 piexif
-Celery
+Celery==4.4.7
 Flask-Celery-Helper

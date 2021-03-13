@@ -13,4 +13,5 @@ echo "STARTING CELERY"
 # /usr/bin/supervisord -c /home/myp/app/supervisor_worker.conf --nodaemon &
 celery worker -A celery_runner -l info &
 echo "STARTING APP"
+python manage.py recreate_db &
 python manage.py run -h 0.0.0.0
