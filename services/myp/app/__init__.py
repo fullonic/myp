@@ -29,7 +29,8 @@ def create_app(config=None):
     app.config.from_object(app_settings)
 
     # Set up dependencies
-    toolbar.init_app(app)
+    if os.getenv("FLASK_DEBUG_TOOLBAR") is True:
+        toolbar.init_app(app)
     cache.init_app(app)
     db.init_app(app)
     migrate.init_app(app, db)

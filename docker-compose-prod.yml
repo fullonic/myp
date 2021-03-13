@@ -1,10 +1,10 @@
-version:          "3.7"
+version: "3.7"
 
 services:
   # Creates a service called myp
   myp:
     build:
-      context:    ./services/myp
+      context: ./services/myp
       dockerfile: Dockerfile-prod
     expose:
       - 5000
@@ -17,7 +17,7 @@ services:
   # Builds DB from local costum db image
   myp-db:
     build:
-      context:    ./services/myp/app/db
+      context: ./services/myp/app/db
       dockerfile: Dockerfile
     expose:
       - 5432
@@ -26,10 +26,17 @@ services:
   # nginx setup
   nginx:
     build:
-      context:    ./services/nginx
+      context: ./services/nginx
       dockerfile: Dockerfile-prod
-    restart:      always
+    restart: always
     ports:
       - 80:80
     depends_on:
       - myp
+
+  rmq:
+    image: rabbitmq:3-management
+    env_file:
+      - app-prod.env
+    ports:
+      - 15672:15672

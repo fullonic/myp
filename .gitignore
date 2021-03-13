@@ -5,3 +5,4 @@ venv
 htmlcov
 MYP
 tests/data
+.vscode

@@ -7,7 +7,6 @@ from celery import Celery
 from app.config import DevConfig
 from app import create_app
 
-# app.config["CELERY_IMPORTS"] = ()
 def make_celery(app):
     app.config["CELERY_IMPORTS"] = ("app.main.main_tasks",)
     celery = Celery(
