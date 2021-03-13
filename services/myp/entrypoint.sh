@@ -14,4 +14,5 @@ echo "STARTING CELERY"
 celery worker -A celery_runner -l info &
 echo "STARTING APP"
 python manage.py recreate_db &
+python manage.py create_folders &
 python manage.py run -h 0.0.0.0

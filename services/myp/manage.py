@@ -1,4 +1,5 @@
-import sys
+import os
+from pathlib import Path
 
 from flask.cli import FlaskGroup
 
@@ -6,7 +7,10 @@ from app import create_app, db
 
 import coverage
 
+import logging
 
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 # COV = coverage.Coverage(
 #     branch=True,
 #     include="project/*",
@@ -22,9 +26,31 @@ cli = FlaskGroup(create_app=create_app)
 def recreate_db():
     """Create command for recreate db."""
     db.drop_all()
-    print("CREATING DB")
+    logger.info("CREATING DB")
     db.create_all()
     db.session.commit()
+
+
+@cli.command("create_folders")
+def create_folders():
+    logger.info(">> Creating project folders")
+
+    folders = [
+        "BASE_DIR",
+        "MAPPING_FOLDER",
+        "UPLOAD_FOLDER",
+        "GEOJSON_FOLDER",
+        "DELIVERY_FOLDER",
+        "USERS_FOLDER",
+        "GEOTAG_FOLDER",
+    ]
+    for folder in folders:
+        try:
+            os.mkdir(f"{app.config[folder]}")
+            logger.info(f"  >> {folder} created")
+        except FileExistsError:
+            logger.warning(f"  >> {folder} already exist")
+            continue
 
 
 if __name__ == "__main__":

@@ -12,6 +12,8 @@ class Config:
     # Set up maximum total upload size
     MAX_CONTENT_LENGTH = 1024 * 1024 * 1024  # 1 GB
     # Mapping service
+    BASE_DIR = "./app/main/MYP"
+    MAPPING_FOLDER = "./app/main/MYP/mapping"
     UPLOAD_FOLDER = "./app/main/MYP/mapping/requests"
     GEOJSON_FOLDER = "./app/main/MYP/mapping/geo_files"
     DELIVERY_FOLDER = "./app/main/MYP/mapping/delivery"
