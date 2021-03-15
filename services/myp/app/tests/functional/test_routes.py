@@ -195,7 +195,6 @@ def test_temporary_url(client):
     assert user.id == id_
 
 
-
 @pytest.mark.skip
 def test_create_map_from_gpx_tag(client):
     """
@@ -204,6 +203,7 @@ def test_create_map_from_gpx_tag(client):
     THEN check if the response is valid
     """
     pass
+
 
 ##################
 # AUTHENTICATION TESTS

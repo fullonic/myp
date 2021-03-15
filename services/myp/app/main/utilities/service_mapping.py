@@ -78,8 +78,8 @@ def map_photos(gallery_folder: os.path, project_id: int, service_type: str = "ma
             alt = operator.truediv(m, d)
             data.append(to_json(project_name, lat, lng, name, floor(alt), date, time_))
         except Exception as e:
-            print(e) # NOTE: Needs to be logged
-            print(f"Photo{name} doesn't contains GPS DATA") 
+            print(e)  # NOTE: Needs to be logged
+            print(f"Photo{name} doesn't contains GPS DATA")
     geojson_file = (
         f"{project.user.folder_mapping}/{project_name}/geo_files/{project_name}.geojson"
     )

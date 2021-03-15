@@ -65,7 +65,7 @@ def to_datetime(datetime_: str) -> datetime:
 
 def zipper(mapping_project_id=None, gpx_project_id=None, service_type=None):
     """Generate a zip file to be send to the user with folder structure.
-    
+
     TODO: Create a class for this function
     """
     origin = os.getcwd()

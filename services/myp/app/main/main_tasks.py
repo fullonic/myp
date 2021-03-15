@@ -16,9 +16,11 @@ from .utilities.service_mapping import map_photos
 def multiply(x, y):
     return x * y
 
+
 @celery.task()
 def log(msg):
     return msg
+
 
 @celery.task()
 def save_files(folder, photos):

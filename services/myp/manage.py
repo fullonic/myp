@@ -30,6 +30,7 @@ def recreate_db():
     db.create_all()
     db.session.commit()
 
+
 @cli.command("create_db")
 def create_db():
     """Create command for recreate db."""

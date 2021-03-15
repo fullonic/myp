@@ -44,6 +44,7 @@ class DevConfig(Config):
     CELERY_BROKER_URL = "amqp://rabbitmq:rabbitmq@localhost//"
     CELERY_RESULT_BACKEND = "amqp://rabbitmq:rabitmq@localhost//"
 
+
 class ProdConfig(Config):
     """Development app configuration."""
 
@@ -54,6 +55,7 @@ class ProdConfig(Config):
 
 class TestConfig(Config):
     """Development app configuration."""
+
     CACHE_TYPE = "null"
 
     # Disable CSRF tokens in the Forms (only for testing purposes!)

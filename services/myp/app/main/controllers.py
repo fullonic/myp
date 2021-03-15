@@ -158,6 +158,7 @@ def mapping():
         # map_photos(folder, project.id, ser5001vice_type="mapping")
     return render_template("services/mapping.html", form=form)
 
+
 # MAP BY GPX FILE
 @main_blueprint.route("/map_by_track", methods=["POST", "GET"])
 @login_required
@@ -196,15 +197,15 @@ def map_by_track():
 
             if mapping:
                 print("INSERTING MAP STYLING TABLE")
-                map = Mapping()
-                map.project_name = project.project_name
-                map.user_id = project.user_id
-                map.tiles = session["tiles"]
-                map.color = session["color"]
+                map_ = Mapping()
+                map_.project_name = project.project_name
+                map_.user_id = project.user_id
+                map_.tiles = session["tiles"]
+                map_.color = session["color"]
                 project.map = True  # Flag to decide how to build download url
-                map.create_folders(project.project_name)
+                map_.create_folders(project.project_name)
                 db.session.add(project)
-                db.session.add(map)
+                db.session.add(map_)
                 db.session.commit()
 
             # Insert gpx information into photos
@@ -230,7 +231,7 @@ def create_map():
         if form.validate_on_submit() or current_app.config["TESTING"]:
             # check if the post request has the files part
             if "files" not in request.files:
-                flash("No file part")
+                flash("You missed add the files")
                 return redirect(request.url)
             # Get user Form Data
             files = request.files.getlist("files")
