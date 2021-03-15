@@ -77,8 +77,9 @@ def map_photos(gallery_folder: os.path, project_id: int, service_type: str = "ma
             m, d = img["GPS"][piexif.GPSIFD.GPSAltitude]
             alt = operator.truediv(m, d)
             data.append(to_json(project_name, lat, lng, name, floor(alt), date, time_))
-        except:  # noqa MUST BE REVISED
-            print(f"Photo{name} doesn't contains GPS DATA")  # NOTE: Needs to be logged
+        except Exception as e:
+            print(e) # NOTE: Needs to be logged
+            print(f"Photo{name} doesn't contains GPS DATA") 
     geojson_file = (
         f"{project.user.folder_mapping}/{project_name}/geo_files/{project_name}.geojson"
     )
@@ -118,8 +119,7 @@ def generate_map(
 
     for i in range(len(_file["features"])):
         lng, lat = _file["features"][i]["geometry"]["coordinates"]
-        # date = _file["features"][i]["properties"]["date"]
-        # time_ = _file["features"][i]["properties"]["time_"]
+
         photo = _file["features"][i]["properties"]["photo_location"]
 
         # Create Icon
@@ -151,7 +151,10 @@ def generate_map(
     )
     db.session.add(map_project)
     db.session.commit()
+    return prepare_to_download(service_type, project_name, project_id, map_project)
 
+
+def prepare_to_download(service_type, project_name, project_id, map_project):
     # NEEDS TO BE REFRACTED
     download = Download()
     download.file_path = (

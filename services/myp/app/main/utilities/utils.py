@@ -64,13 +64,17 @@ def to_datetime(datetime_: str) -> datetime:
 
 
 def zipper(mapping_project_id=None, gpx_project_id=None, service_type=None):
-    """Generate a zip file to be send to the user with folder structure."""
+    """Generate a zip file to be send to the user with folder structure.
+    
+    TODO: Create a class for this function
+    """
     origin = os.getcwd()
 
     def set_ready(proj):
         """Set download flag ready to True."""
         download = Download.query.filter_by(
-            project_name=proj.project_name, user_id=proj.user_id).first()
+            project_name=proj.project_name, user_id=proj.user_id
+        ).first()
         download.ready()
         return True
 
@@ -85,7 +89,6 @@ def zipper(mapping_project_id=None, gpx_project_id=None, service_type=None):
                 zip.write(file)
         return set_ready(project)
 
-
     def service_mapping(origin, _, mapping_project_id, type_=None):
         project = Mapping.query.filter_by(id=mapping_project_id).first()
         zip_file = project.download_file.split(".")[0]
@@ -93,6 +96,14 @@ def zipper(mapping_project_id=None, gpx_project_id=None, service_type=None):
         gallery_folder = f"{base}/photos_{project.project_name}"
         os.mkdir(gallery_folder)
         if not type_:
+            # copy photos from /requests to delevery/gallery_folder
+            uploaded_photos_dir = (
+                f"{project.user.folder_mapping}/{project.project_name}/requests"
+            )
+            for photo in os.listdir(uploaded_photos_dir):
+                # Move photos to mapping delivery folder
+                photo_path = f"{uploaded_photos_dir}/{photo}"
+                shutil.copy(photo_path, gallery_folder)
             # Simple mapping project
             source = f"{project.user.folder_mapping}/{project.project_name}/delivery"
             zip_file = f"{source}/{project.project_name}"
@@ -126,13 +137,13 @@ def zipper(mapping_project_id=None, gpx_project_id=None, service_type=None):
 
 def show_map():
     """Create a show map to give the user the ability to choose some map styling."""
-    map = folium.Map([41, 4], zoom_start=6, tiles=None)
-    folium.TileLayer("openstreetmap", name="OSM").add_to(map)
-    folium.TileLayer("CartoDB positron", name="CartoDB Positron").add_to(map)
-    folium.TileLayer("CartoDB dark_matter", name="CartoDB Dark Matter").add_to(map)
-    folium.TileLayer("Stamen Terrain", name="Stamen Terrain").add_to(map)
-    folium.TileLayer("Stamen Toner", name="Stamen Toner").add_to(map)
-    folium.TileLayer("Stamen Watercolor", name="Stamen Watercolor").add_to(map)
+    map_ = folium.Map([41, 4], zoom_start=6, tiles=None)
+    folium.TileLayer("openstreetmap", name="OSM").add_to(map_)
+    folium.TileLayer("CartoDB positron", name="CartoDB Positron").add_to(map_)
+    folium.TileLayer("CartoDB dark_matter", name="CartoDB Dark Matter").add_to(map_)
+    folium.TileLayer("Stamen Terrain", name="Stamen Terrain").add_to(map_)
+    folium.TileLayer("Stamen Toner", name="Stamen Toner").add_to(map_)
+    folium.TileLayer("Stamen Watercolor", name="Stamen Watercolor").add_to(map_)
     colors = "blue purple red green orange".split(" ")
     for i, color in enumerate(colors):
         folium.CircleMarker(
@@ -142,11 +153,11 @@ def show_map():
             radius=6,
             fill=True,
             fill_opacity=1,
-        ).add_to(map)
+        ).add_to(map_)
         i += i * random.random() * 2
 
-    folium.LayerControl().add_to(map)
-    map.save("app/main/templates/main/show_map.html")
+    folium.LayerControl().add_to(map_)
+    map_.save("app/main/templates/main/show_map.html")
 
 
 #################
