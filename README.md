@@ -10,6 +10,7 @@ The main goal of this project was project on a map all the photos during a trave
 >> docker -f docker-compose-prod.yml up --build
 
 ```
+
 App will be available on visit: http://localhost/
 Even though there is any notorious difference from the environment configuration from development and production, the production compose have nginx setup as a web server which gives a better performance.
 
@@ -28,5 +29,12 @@ Even though there is any notorious difference from the environment configuration
 - Improve map style
 - and more ...
 
-#### How it works
+## How it works
+
+### Create a map by using geographical information extracted from photo metadata
+
+![Create project photos on map using GPS metadata](service_mapping.gif)
+
+### Create a map by extracting geographical information from a GPS track file
+
 ![Add GPS information from GPS track](service_by_tag.gif)
